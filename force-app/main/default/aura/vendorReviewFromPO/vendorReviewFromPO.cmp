@@ -1,0 +1,14 @@
+<aura:component implements="force:appHostable,force:hasSObjectName,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,lightning:actionOverride,force:lightningQuickActionWithoutHeader" access="global" >
+    <aura:html tag="style">
+    .slds-modal__content{
+        overflow-y:scroll !important;
+    }
+    </aura:html>
+
+    <div>
+        <c:BT_NewVendorReview />
+    </div>
+
+     
+    
+</aura:component>
