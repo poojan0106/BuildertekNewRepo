@@ -643,7 +643,7 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
                 mail.setSubject('SavePDF [ref:' + quoterec.Id + ']');
                 mail.setSaveAsActivity(false);
                 System.debug('templateId: ' + templateId);
-                if (templateId != null){
+                if (templateId == null){
                     templateId = [SELECT Id
                                   FROM EmailTemplate
                                   WHERE DeveloperName = :'Quote_Template_2'].Id;

@@ -29,18 +29,12 @@
                 action.setCallback(this, function (response) {
                     if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
                         var objName = response.getReturnValue();
-                        console.log({objName});
                         if(objName == 'Account'){
                             component.set("v.NameOfVendor", parentRecordId);
-                        }else if(objName == 'buildertek__Project__c'){
-                            component.set('v.NameOfProject' , parentRecordId);
-                            console.log(component.get('v.NameOfProject'));
                         }else if(objName == 'buildertek__Purchase_Order__c'){
                             component.set("v.parentpurchaseRecordId", parentRecordId);
                             helper.vendors(component,event,helper);
                         }
-
-                       
                     } 
                 });
                 $A.enqueueAction(action);

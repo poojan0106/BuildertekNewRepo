@@ -222,7 +222,7 @@ public with sharing class PreviewBillingsController{
     @AuraEnabled
     public static String sendProposal(String htmlBody, String recordId, String templateId, List<String> to, List<String> cc){
         try{
-            Blob b;
+            Blob tempblob;
             List<Contact> conList =  [Select Id,Name,email from Contact where Id IN :to and email != null];
 
             String subject = 'Invoice';
@@ -266,8 +266,8 @@ public with sharing class PreviewBillingsController{
                 efa.setBody(setAttachmentBody(recordId, templateId));
                 fileAttachments.add(efa);
                 mail.setFileAttachments(fileAttachments);
-                b = setAttachmentBody(recordId, templateId);
-                system.debug('Blob ---> ' + b);
+                tempblob = setAttachmentBody(recordId, templateId);
+                system.debug('Blob ---> ' + tempblob);
                 mail.setSaveAsActivity(false);
                 mails.add(mail);
             }
@@ -312,7 +312,7 @@ public with sharing class PreviewBillingsController{
                     ContentVersion conVer = new ContentVersion();
                     conVer.PathOnClient = 'Invoice.pdf'; // The files name, extension is very important here which will help the file in preview.
                     conVer.Title = 'Invoice.pdf'; // Display name of the files
-                    conVer.VersionData = b; // converting your binary string to Blog
+                    conVer.VersionData = tempblob; // converting your binary string to Blog
                     insert conVer;    //Insert ContentVersion
                     
                     ContentDocumentLink conDocLink = New ContentDocumentLink();
