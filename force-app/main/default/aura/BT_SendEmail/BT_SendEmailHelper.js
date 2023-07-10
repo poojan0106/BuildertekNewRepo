@@ -2,8 +2,15 @@
 	getTemplate : function(component, event, helper) {
 		var dbAction = component.get("c.getTemplates");
         console.log("Folder Name : ",component.get("v.templatefolderName"));
+        var folname;
+        if (component.get("v.sObjectName") == 'buildertek__Change_Order__c') {
+            folname = 'BT CO';
+        }
+        else{
+            folname = component.get("v.templatefolderName");
+        }
         dbAction.setParams({
-            folderName: component.get("v.templatefolderName"),
+            folderName: folname,
         });
         dbAction.setCallback(this, function (response) {
             var state = response.getState();
@@ -500,9 +507,17 @@
     getProjectName:function(component, event, helper) {
         var action = component.get('c.getProNameAndAutoNum');
         console.log('get  proj name heloper');
+        var objectName = component.get("v.objectAPI");
+        var objApiName ;
+        if (objectName) {
+            objApiName = component.get("v.objectAPI");
+        }
+        else{
+            objApiName = component.get("v.sObjectName");
+        }
         action.setParams({
             recordId : component.get("v.recordId"),
-            objectAPIName: component.get("v.objectAPI"),
+            objectAPIName: objApiName,
         });
         action.setCallback(this, function (response) {
             var state = response.getState();

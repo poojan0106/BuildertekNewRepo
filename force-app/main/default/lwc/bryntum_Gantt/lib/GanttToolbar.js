@@ -459,7 +459,8 @@ export default base => class GanttToolbar extends base {
                     }
                 }
                 getChildren(taskData[0])
-                console.log(rowData)
+                console.log('rowData-->',rowData)
+                // console.log(rowData)
                 var updateDataList = [];
                 var updateDataCloneList = [];
                 var insertData = [];
@@ -527,9 +528,9 @@ export default base => class GanttToolbar extends base {
                     for(var j=0;j<dependenciesData.length;j++){
                         if(dependenciesData[j]['to'] == rowData[i]['id']){
                             if(dependenciesData[j]['id'].indexOf('_generated') >= 0){
-                                updateData['buildertek__Dependency__c'] = dependenciesData[j]['from']
+                                updateData['buildertek__Dependency__c'] = dependenciesData[j]['to']
                             }else{
-                                updateData['buildertek__Dependency__c'] = dependenciesData[j]['from']
+                                updateData['buildertek__Dependency__c'] = dependenciesData[j]['to']
                             }
                             filledDependency = true;
                         }
@@ -561,8 +562,8 @@ export default base => class GanttToolbar extends base {
                     }
                     updateDataList.push(updateData)
                 }
-                debugger;
                 console.log('updateDataList ==> ',{updateDataList});
+                debugger;
 
                 if(this.gantt.callGanttComponent){
                     if(this.gantt.callGanttComponent.scheduleData){
@@ -599,6 +600,11 @@ export default base => class GanttToolbar extends base {
 
                 // console.log('---------------------------------------');
                 // console.log('updateDataCloneList ==> ',{updateDataCloneList});
+                console.log('updateDataList ==> ',{updateDataList});
+                console.log('updateDataCloneList ==> ',{updateDataCloneList});
+                console.log('---------------------------------------');
+                debugger;
+
 
                 this.gantt.callGanttComponent.callinsertUpdateTaskList(updateDataCloneList)
                 this.gantt.callGanttComponent.scheduleItemsDataList = updateDataList;
