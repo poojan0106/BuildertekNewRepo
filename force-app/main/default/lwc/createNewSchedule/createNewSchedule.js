@@ -21,10 +21,8 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
     @track masterRec = '';
     @track listOfFields = [];
     @track scheduleLineItems = [];
-    @api scheduleId = '';
-    @track initialStartDate;
+    @track initialStartDate = '';
     description = '';
-    intialDate = '';
     type = 'Standard';
 
     connectedCallback(event) {
@@ -37,7 +35,7 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
             this.searchProjectName = event.target.value;
             this.searchbarValue = event.target.dataset.id;
             console.log(`searchProjectName: ${this.searchProjectName}`);
-            if (this.searchProjectName.length >= 3) {
+            if (this.searchProjectName.length != 0) {
                 clearTimeout(this.searchTimeout);
                 this.searchTimeout = setTimeout(() => {
                     searchProject({ searchProjectName: this.searchProjectName })
@@ -64,7 +62,7 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
             this.searchProjectManager = event.target.value;
             this.searchbarValue = event.target.dataset.id;
             console.log(`searchProjectManager: ${this.searchProjectManager}`);
-            if (this.searchProjectManager.length >= 3) {
+            if (this.searchProjectManager.length != 0) {
                 clearTimeout(this.searchTimeout);
                 this.searchTimeout = setTimeout(() => {
                     searchUsers({ searchProjectManagerName: this.searchProjectManager })
@@ -156,20 +154,22 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
             console.log(`description: ${this.description} projectId: ${this.projectId} formattedDate: ${this.initialStartDate} type: ${this.type} userId: ${this.userId} masterRec: ${this.masterRec}`);
             createNewSchedule({ description: this.description, project: this.projectId, initialStartDate: this.initialStartDate, type: this.type, user: this.userId, masterId: this.masterRec })
                 .then((result) => {
-                    this.scheduleId = result;
-                    console.log('url:', this.scheduleId);
+                    console.log('url:', result);
                     let cmpDef = {
                         componentDef: "c:gantt_component",
-                        id: this.scheduleId,
+                        attributes: {
+                            SchedulerId: result != "" ? result : "No Record Created",
+                        }
                     };
-
                     let encodedDef = btoa(JSON.stringify(cmpDef));
+
                     this[NavigationMixin.Navigate]({
                         type: "standard__webPage",
                         attributes: {
                             url: "/one/one.app#" + encodedDef
                         }
                     });
+
                 })
                 .catch((error) => {
                     console.log('error:', error);

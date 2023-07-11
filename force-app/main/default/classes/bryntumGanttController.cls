@@ -502,10 +502,10 @@ public with sharing class bryntumGanttController {
         System.debug('masterId: ' + masterId);
         buildertek__Schedule__c schedule = new buildertek__Schedule__c(
             buildertek__Description__c = description,
-            buildertek__Project__c = project,
             buildertek__Initial_Start_Date__c = date.parse(initialStartDate.format()),
             buildertek__Type__c = type,
-            buildertek__Project_Managers__c = user
+            buildertek__Project_Managers__c = user,
+            buildertek__Project__c = project
         );
         insert schedule;
         String pageUrl = schedule.Id;

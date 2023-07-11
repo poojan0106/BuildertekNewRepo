@@ -1,4 +1,4 @@
-<aura:component controller="BT_SendEmailController" implements="force:hasRecordId,force:appHostable,flexipage:availableForAllPageTypes,force:hasSObjectName,force:lightningQuickActionWithoutHeader,forceCommunity:availableForAllPageTypes,flexipage:availableForRecordHome" access="global">
+<aura:component controller="BT_SendEmailController" implements="force:hasRecordId,force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader" access="global">
 	
 	
 	<aura:attribute name="onSuccess" type="Object"/>
@@ -37,7 +37,6 @@
     <aura:attribute name="bodytemplatesList" type="List" default="[]"/>
 	<aura:attribute name="selectedbodyTemplateItem" type="String" default=""/>
     <aura:attribute name="selectedInvoiceBodyContent" type="String" default="" />
-	<aura:attribute name="sobjecttype" type="String" default="{!v.sObjectName}"/>
 	
 	<!-- <lightning:overlayLibrary aura:id="overlay"/>  -->
 	<c:BT_Spinner/>
@@ -163,15 +162,6 @@
 	             <lightning:button class="slds-float_right" name="Send" variant="brand" type="submit" label="Send" onclick="{!c.sendemail}"/>
 		     </div>
 	    </div>
-		<aura:if isTrue="{!v.sObjectName == 'buildertek__Change_Order__c'}">
-			<div class="footercls">
-				<div aura:id="footer">
-					<lightning:button name="cancel" variant="Neutral" label="Cancel" onclick="{!c.closeWindow}"/>
-					<lightning:button class="slds-float_right" name="Send" variant="brand" type="submit" label="Send" onclick="{!c.sendemail}"/>
-				</div>
-			</div>
-		</aura:if>
-
     </div>
     
 </aura:component>

@@ -1,5 +1,5 @@
 /* globals bryntum : true */
-import { LightningElement, track, wire } from "lwc";
+import { LightningElement, track, api } from "lwc";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import { loadScript, loadStyle } from "lightning/platformResourceLoader";
 import GANTT from "@salesforce/resourceUrl/bryntum_gantt";
@@ -14,9 +14,15 @@ export default class Gantt_component extends LightningElement {
     @track scheduleItemsDataList;
     @track scheduleData;
     @track scheduleItemsData;
+    @api SchedulerId;
 
     connectedCallback() {
-        this.getScheduleWrapperDataFromApex();
+        this.getScheduleWrapperDataFromApex(this.urlId);
+        if (this.SchedulerId == null || this.SchedulerId == undefined) {
+            this.SchedulerId = 'a2zDm000000suFyIAI'
+        } else{
+            console.log('SchedulerId :- ',this.SchedulerId);
+        }
     }
 
     renderedCallback() {
@@ -46,7 +52,7 @@ export default class Gantt_component extends LightningElement {
 
     getScheduleWrapperDataFromApex() {
         scheduleWrapperDataFromApex({
-            scheduleid: 'a101K00000GobSmQAJ',
+            scheduleid: this.SchedulerId,
         }).then((response) => {
             console.log('response ', JSON.parse(JSON.stringify(response)));
             var records = response;

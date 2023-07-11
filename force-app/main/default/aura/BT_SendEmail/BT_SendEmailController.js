@@ -3,16 +3,9 @@
 	doInit : function(component, event, helper) {
         var objectName = component.get("v.objectAPI");
         var dbAction = component.get("c.getsubject");
-        var objApiName ;
-        if (objectName) {
-            objApiName = component.get("v.objectAPI");
-        }
-        else{
-            objApiName = component.get("v.sObjectName");
-        }
         dbAction.setParams({
             recordId : component.get("v.recordId"),
-            objectAPIName: objApiName,
+            objectAPIName: component.get("v.objectAPI"),
         });
         dbAction.setCallback(this, function (response) {
             var state = response.getState();
@@ -27,7 +20,6 @@
         });
         $A.enqueueAction(dbAction);
         console.log({objectName});
-        console.log(objApiName);
 
         if(objectName == 'buildertek__RFI__c' || objectName == 'buildertek__Submittal__c'){
              component.set("v.showTemplate", false);
@@ -232,9 +224,6 @@
             }  
         }
     },                
-    closeWindow: function(component, event, helper) {
-        window.close();
-    }
 
               
                 
