@@ -148,5 +148,19 @@ public with sharing class AccountPayableHelper {
             }
         }
     }
+
+    public static void callOnBeforeUpdate(buildertek__Account_Payable__c[] invoiceList, Map<Id, buildertek__Account_Payable__c> invoiceNewMap , Map<Id, buildertek__Account_Payable__c> invoiceOldMap){
+        System.debug('callOnBeforeUpdate');
+
+        List<buildertek__Payment__c> paymentList=[Select Id , Name , buildertek__Payable__c  From buildertek__Payment__c WHERE buildertek__Payable__c=:invoiceNewMap.keySet()];
+        System.debug(paymentList.isEmpty());
+        for(buildertek__Account_Payable__c invoice:invoiceList){
+
+            if(!paymentList.isEmpty()){
+                invoice.addError('You cannot update this Contractor Invoice because there is a Cash Disbursements associated with it.  If you would like to change this Contractor Invoice, please remove the Cash Disbursements first.');
+    
+            }
+        }
+    }
     
 }

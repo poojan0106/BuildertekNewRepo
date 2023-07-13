@@ -37,9 +37,9 @@ public class PurchaseOrderTrigger_Test {
         insert POItem;
         System.assert(POItem.Id!=null);
         
-        // buildertek__Account_Payable__c payable = new buildertek__Account_Payable__c();
-        // payable.buildertek__Purchase_Order__c=PO.Id;
-        // insert payable;
+        buildertek__Account_Payable__c payable = new buildertek__Account_Payable__c();
+        payable.buildertek__Purchase_Order__c=PO.Id;
+        insert payable;
         
         // buildertek__Account_Payable_Item__c payableItem = new buildertek__Account_Payable_Item__c();
         // payableItem.Name='test item';

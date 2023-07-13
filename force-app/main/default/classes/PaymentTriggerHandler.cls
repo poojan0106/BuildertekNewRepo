@@ -1,4 +1,7 @@
 public class PaymentTriggerHandler {
+
+    public static Boolean isExecuting = false;
+
     
     public void afterInsert(List<buildertek__BT_Payment__c> newPaymentline, Map<Id, buildertek__BT_Payment__c> newPaymentlineMap){
         
@@ -29,6 +32,7 @@ public class PaymentTriggerHandler {
             for(buildertek__Account_Payable_Clone__c invoice : invoiceRecList){
                 invoice.buildertek__Payment_Amount__c = invoiceMap.get(invoice.Id);
             }
+            isExecuting=true;
             update invoiceRecList;
         }
         system.debug('invoiceRecList----->'+invoiceRecList);

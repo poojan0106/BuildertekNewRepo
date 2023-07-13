@@ -16,7 +16,11 @@ trigger AccountPayableTrigger on buildertek__Account_Payable__c (before insert,b
             BT_Utils.genrateAutoNumber([Select Id, Auto_Number1__c from Account_Payable__c 
                                             where Purchase_Order__c =:AccountPayableList[0].Purchase_Order__c 
                                             ORDER BY CREATEDDATE DESC  LIMIT 1], AccountPayableList, 'Auto_Number1__c');
-         AccountPayableHelper.onbeforeUpdate(trigger.new);
+            AccountPayableHelper.onbeforeUpdate(trigger.new);
+
+            if(Trigger.isUpdate){
+                AccountPayableHelper.callOnBeforeUpdate(Trigger.new, Trigger.newMap, trigger.oldMap);
+            }
         }else if(Trigger.isDelete){
             AccountPayableHelper.beforeDelete(Trigger.old);    
         }
