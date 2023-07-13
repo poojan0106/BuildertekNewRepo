@@ -718,26 +718,25 @@ public with sharing class bryntumGanttController {
 		// }
 		// System.debug('end resultantStartDate in addDayskepping method ==> '+resultantStartDate);
 		// return resultantStartDate;
-        Long range = (7) * 24 * 60 * 60 * 1000;
-        Date finishDate = System.BusinessHours.add(businessHourId, startDate.addDays(duration), range).date();
-        System.debug('finishDate:'+ finishDate);
-        return finishDate;
-//         Date startDate = Date.newInstance(2023, 8, 1);
-// Integer duration = 365;
-// Integer addedDays = 0;
+        // Long range = (7) * 24 * 60 * 60 * 1000;
+        // Date finishDate = System.BusinessHours.add(businessHourId, startDate.addDays(duration), range).date();
+        // System.debug('finishDate:'+ finishDate);
+        // return finishDate;
+        Date startDates = Date.newInstance(startDate.year(), startDate.month(), startDate.day());
+        Integer addedDays = 0;
 
-// while (addedDays < duration) {
-//     startDate = startDate.addDays(1);
-//     DateTime currentDate = DateTime.newInstance(startDate.year(), startDate.month(), startDate.day());
-//     String todayDay = currentDate.format('EEEE');
-//     if (todayDay != 'Saturday' && todayDay != 'Sunday') {
-//         ++addedDays;
-//     }
-// }
+        while (addedDays < duration) {
+            startDates = startDates.addDays(1);
+            DateTime currentDate = DateTime.newInstance(startDates.year(), startDates.month(), startDates.day());
+            String todayDay = currentDate.format('EEEE');
+            if (todayDay != 'Saturday' && todayDay != 'Sunday') {
+                ++addedDays;
+            }
+        }
 
-// Date endDate = startDate.addDays(-1);  // endDate represents the final calculated end date
-// System.debug('Final endDate: ' + endDate);
-
+        Date endDate = startDates.addDays(-1); 
+        System.debug('Final endDate: ' + endDate);
+        return endDate;
 	}
     
 }

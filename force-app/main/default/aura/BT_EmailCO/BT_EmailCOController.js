@@ -1,23 +1,23 @@
 ({
 	
 	doInit : function(component, event, helper) {
-        var objectName = component.get("v.objectAPI");
+        var objectName = component.get("v.sObjectName");
         var dbAction = component.get("c.getsubject");
-        var objApiName ;
-        if (objectName) {
-            objApiName = component.get("v.objectAPI");
-        }
-        else{
-            objApiName = component.get("v.sObjectName");
-        }
+        // var objApiName ;
+        // if (objectName) {
+        //     objApiName = component.get("v.objectAPI");
+        // }
+        // else{
+        //     objApiName = component.get("v.sObjectName");
+        // }
         dbAction.setParams({
             recordId : component.get("v.recordId"),
-            objectAPIName: objApiName,
+            objectAPIName: component.get("v.sObjectName"),
         });
         dbAction.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
-                if(objApiName == 'buildertek__Change_Order__c'){
+                if(objectName == 'buildertek__Change_Order__c'){
                     component.set("v.subject", '');
                 }else{
 
@@ -27,7 +27,7 @@
         });
         $A.enqueueAction(dbAction);
         console.log({objectName});
-        console.log(objApiName);
+        // console.log(objApiName);
 
         if(objectName == 'buildertek__RFI__c' || objectName == 'buildertek__Submittal__c'){
              component.set("v.showTemplate", false);

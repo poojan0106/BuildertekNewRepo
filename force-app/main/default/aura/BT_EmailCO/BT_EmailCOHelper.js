@@ -6,9 +6,13 @@
         if (component.get("v.sObjectName") == 'buildertek__Change_Order__c') {
             folname = 'BT CO';
         }
+        if(component.get("v.sObjectName") == 'buildertek__Project__c'){
+            folname = 'My Personal Email Templates';
+        }
         else{
             folname = component.get("v.templatefolderName");
         }
+        console.log('folname',folname);
         dbAction.setParams({
             folderName: folname,
         });
@@ -203,7 +207,7 @@
             if (state === "SUCCESS") {
                 if(response.getReturnValue() == 'Success'){
                     $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
-                    if (component.get("v.sObjectName") == 'buildertek__Change_Order__c') {
+                    if (component.get("v.sObjectName") == 'buildertek__Change_Order__c' || component.get("v.sObjectName") == 'buildertek__Project__c') {
                         $A.get("e.force:closeQuickAction").fire();
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({

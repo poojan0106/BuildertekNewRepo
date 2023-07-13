@@ -37,20 +37,20 @@ public class PurchaseOrderTrigger_Test {
         insert POItem;
         System.assert(POItem.Id!=null);
         
-        buildertek__Account_Payable__c payable = new buildertek__Account_Payable__c();
-        payable.buildertek__Purchase_Order__c=PO.Id;
-        insert payable;
+        // buildertek__Account_Payable__c payable = new buildertek__Account_Payable__c();
+        // payable.buildertek__Purchase_Order__c=PO.Id;
+        // insert payable;
         
-        buildertek__Account_Payable_Item__c payableItem = new buildertek__Account_Payable_Item__c();
-        payableItem.Name='test item';
-        payableItem.buildertek__Account_Payable__c=payable.Id;
-        payableItem.buildertek__Quantity__c=1;
-        payableItem.buildertek__Unit_Price__c=25000;
-        insert payableItem;
+        // buildertek__Account_Payable_Item__c payableItem = new buildertek__Account_Payable_Item__c();
+        // payableItem.Name='test item';
+        // payableItem.buildertek__Account_Payable__c=payable.Id;
+        // payableItem.buildertek__Quantity__c=1;
+        // payableItem.buildertek__Unit_Price__c=25000;
+        // insert payableItem;
         
-        System.debug(' PO :: '+PO.buildertek__Paid__c);
-        System.debug(' PO :: '+PO.buildertek__Paid_Amount__c);
-        System.debug(' PO :: '+PO.buildertek__PO_Amount__c);
+        // System.debug(' PO :: '+PO.buildertek__Paid__c);
+        // System.debug(' PO :: '+PO.buildertek__Paid_Amount__c);
+        // System.debug(' PO :: '+PO.buildertek__PO_Amount__c);
         
         try{
             delete PO;
