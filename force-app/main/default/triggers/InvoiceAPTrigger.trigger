@@ -2,8 +2,8 @@ trigger InvoiceAPTrigger on buildertek__Account_Payable_Clone__c (before update 
 
     InvoiceAPTriggerHandler handler = new  InvoiceAPTriggerHandler();
 
-    if (Trigger.isBefore && Trigger.isUpdate && PaymentTriggerHandler.isExecuting== false) {
-        handler.onBeforeUpdate(Trigger.new , Trigger.newMap , Trigger.oldMap);
+    if(Trigger.isBefore && Trigger.isUpdate && !PaymentTriggerHandler.isSkipExecution){
+        handler.RestrictToUpdatePI(Trigger.new, Trigger.newMap , Trigger.oldMap); 
     }
 
     if (Trigger.isAfter) {

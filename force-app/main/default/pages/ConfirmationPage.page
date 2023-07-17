@@ -49,7 +49,6 @@
             list-style: disc;
             margin-left: 2% !important;
         }
-
     </style>
     <script>
         function scrolldown() {
@@ -461,6 +460,10 @@
                     if (signaturePad.isEmpty()) {
                         document.getElementById('rejectId').style.display = "block";
                     } else {
+                        //Start :: BUIL-3389 -
+                        document.getElementById('spinner').className -= ' slds-hide';
+                        document.getElementById('spinner').className += ' slds-spinner_container';
+                        //End:: BUIL-3389 -
                         var image = canvas.toDataURL().split(',')[1];
                         document.getElementById('rejectId').style.display = "none";
                         callRejectPopup(image);
@@ -476,6 +479,11 @@
             function saveRejectPopup() {
                 var rejectionReason = document.getElementsByClassName("textareaStyleClass")[0].value;
                 if (rejectionReason) {
+                        //Start :: BUIL-3389 -
+                        document.getElementById('spinner').className -= ' slds-hide';
+                        document.getElementById('spinner').className += ' slds-spinner_container';
+                        //End:: BUIL-3389 -
+
                     saveRejectionReasonPopup();
                 } else {
                        alert('Please enter rejection reason');
@@ -503,9 +511,9 @@
             }
 
             function closeRejectPopup() {
+                window.location.reload()
                 closeRejectReasonPopup();
             }
-
 
             function saveImage() {
              const x ='{!Result}';
@@ -515,6 +523,11 @@
                 if (signaturePad.isEmpty()) {
                     document.getElementById('signid').style.display = "block";
                 } else {
+                    //Start :: BUIL-3389 -
+                    document.getElementById('spinner').className -= ' slds-hide';
+                    document.getElementById('spinner').className += ' slds-spinner_container';
+                    //End:: BUIL-3389 -
+
                     var image = canvas.toDataURL().split(',')[1];
                     document.getElementById('signid').style.display = "none";
                     callSaveSigMethod(image);
@@ -525,7 +538,15 @@
             }
 
             function createAttachment() {
+                //Start :: BUIL-3389 -
+                document.getElementById('spinner').className += ' slds-hide';
+                //End:: BUIL-3389 -
                 insertAttachment();
+            }
+            function hideSpinner(){
+                //Start :: BUIL-3389 -
+                document.getElementById('spinner').className += ' slds-hide';
+                //End:: BUIL-3389 -
             }
 
 
@@ -536,10 +557,10 @@
         <apex:actionFunction name="insertAttachment" action="{!insertAttachment}" rerender="frmid">
         </apex:actionFunction>
 
-        <apex:actionFunction name="callRejectPopup" action="{!showRejectReasonPopup}" rerender="frmid,rejectionPopup">
+        <apex:actionFunction name="callRejectPopup" action="{!showRejectReasonPopup}" rerender="frmid,rejectionPopup" oncomplete="hideSpinner()">
             <apex:param name="imageValue" assignTo="{!imageContentforReject}" value="" />
         </apex:actionFunction>
-        <apex:actionFunction name="saveRejectionReasonPopup" action="{!saveRejectionReason}" rerender="frmid,rejectionPopup">
+        <apex:actionFunction name="saveRejectionReasonPopup" action="{!saveRejectionReason}" rerender="frmid,rejectionPopup" oncomplete="hideSpinner()">
         </apex:actionFunction>
         <apex:actionFunction name="saveacceptandRejectlines" action="{!updateQuotelinestatus}" rerender="frmid">
         </apex:actionFunction>
