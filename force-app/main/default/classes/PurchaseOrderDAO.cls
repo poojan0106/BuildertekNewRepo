@@ -321,6 +321,7 @@ public without sharing class PurchaseOrderDAO{
      Throws [Exceptions]:
      **********************************************************************************************************************/
     public static string createAP(List<Purchase_Order__c> pos){
+        system.debug('Inside createAP');
         Map<Id, Account_Payable__c> PoIdbyAp = new Map<Id, Account_Payable__c>();
         Id posRecId;
         for (Purchase_Order__c po : pos){
@@ -349,6 +350,7 @@ public without sharing class PurchaseOrderDAO{
     }
 
     public static void createAPItems(List<Purchase_Order_Item__c> poItems){
+        system.debug('In createAPItems');
         Map<Id, Account_Payable__c> PoIdbyAp = new Map<Id, Account_Payable__c>();
 
         set<Id> poIds = new set<Id>();

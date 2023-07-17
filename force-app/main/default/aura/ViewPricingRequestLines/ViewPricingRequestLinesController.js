@@ -138,13 +138,12 @@ $A.enqueueAction(action3);
                                 "type": 'Success'
                             });
                             toastEvent.fire(); 
-                            
                             $A.get('e.force:refreshView').fire();
-                            var navEvt = $A.get("e.force:navigateToSObject");
-                                navEvt.setParams({
-                                    "recordId": component.get("v.recordId"),
-                                    "slideDevName": "detail"
-                                });
+                             var navEvt = $A.get("e.force:navigateToSObject");
+            navEvt.setParams({
+                "recordId": component.get("v.recordId"),
+                "slideDevName": "detail"
+            });
                              component.set("v.Spinner", false);
                     //         $A.get('e.force:refreshView').fire();
                             navEvt.fire();

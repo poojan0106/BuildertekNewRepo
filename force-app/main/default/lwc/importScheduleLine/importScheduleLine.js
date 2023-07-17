@@ -126,10 +126,7 @@ export default class FileUploadComponent extends LightningElement {
                     if (startIndex !== null && endIndex !== null) {
                         let sub = arr[i].substring(startIndex, endIndex);
                         sub = sub.replaceAll(",", ":comma:");
-                        arr[i] =
-                            arr[i].substring(0, startIndex) +
-                            sub +
-                            arr[i].substring(endIndex, arr[i].length);
+                        arr[i] = arr[i].substring(0, startIndex) + sub + arr[i].substring(endIndex, arr[i].length);
                         startIndex = null;
                         endIndex = null;
                     }
@@ -146,6 +143,8 @@ export default class FileUploadComponent extends LightningElement {
                     data[j] = newStr;
                     // console.log('newStr:', newStr);
                     if (headers[j].trim() === "StartDate" && data[j].trim() !== "") {
+                        console.log('data[j].trim()',data[j].trim());
+                        console.log('data[j].trim() type:',typeof(data[j].trim()));
                         let date = data[j].trim();
                         let splitDate = date.split("/");
                         if (
@@ -164,8 +163,8 @@ export default class FileUploadComponent extends LightningElement {
                         } else {
                             day = splitDate[1];
                         }
-
-                        obj[headers[j].trim()] = month.split("-").reverse().join("-");
+                        // obj[headers[j].trim()] = month.split("-").reverse().join("-");
+                        obj[headers[j].trim()] = data[j].trim().replace(/\//g, "-");
                     } else {
                         if (headers[j].trim() === "% Complete") {
                             obj["percentComplete"] = data[j].trim();
@@ -176,15 +175,16 @@ export default class FileUploadComponent extends LightningElement {
                 }
 
                 if (obj.StartDate !== undefined && obj.StartDate !== "") {
+                    console.log('StartDate:',obj.StartDate);
                     jsonObj.push(obj);
                 } else {
                     let today = new Date();
                     let dd = String(today.getDate()).padStart(2, "0");
                     let mm = String(today.getMonth() + 1).padStart(2, "0");
                     let yyyy = today.getFullYear();
-
                     today = yyyy + "-" + mm + "-" + dd;
                     obj.StartDate = today;
+                    console.log('obj.StartDate:',obj.StartDate);
                     // console.log('today:', today);
                     // console.log('obj.StartDate:', obj.StartDate);
                     jsonObj.push(obj);
@@ -284,7 +284,7 @@ export default class FileUploadComponent extends LightningElement {
         const jsonData = JSON.parse(jsonstr);
         const recordId = this.RecordId;
         // const action = this.insertData;
-        console.log("CSV FIle:", JSON.stringify(jsonData));
+        console.log("CSV File:", JSON.stringify(jsonData));
 
         insertData({
             // recordId: this.RecordId,
@@ -364,6 +364,7 @@ export default class FileUploadComponent extends LightningElement {
                             }
                         } else {
                             // window.open('/apex/BT_Task_Manager?recordId=' + escape(recordId), '_self');
+                            debugger;
                             window.open("/a101K00000GodXbQAJ", "_self");
                         }
                     } else {

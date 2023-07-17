@@ -1,6 +1,7 @@
 trigger AccountPayableTrigger on buildertek__Account_Payable__c (before insert,before update,before delete, after insert, after update) {
     if (Trigger.isBefore) {
         System.debug('Before Trigger');
+
         if(Trigger.isInsert || Trigger.isUpdate) {
             list<Account_Payable__c> AccountPayableList = new list<Account_Payable__c>();
             for(Account_Payable__c AccountPayable : trigger.New){
@@ -28,6 +29,7 @@ trigger AccountPayableTrigger on buildertek__Account_Payable__c (before insert,b
         }
     } else if (Trigger.isAfter) {
         System.debug('After Trigger');
+        system.debug('Id => ' + Trigger.New[0].Id);
 
         if (Trigger.isInsert) {
             AccountPayableHelper.OnAfterInsert(Trigger.new, Trigger.newMap); 
