@@ -334,6 +334,7 @@ public without sharing class PurchaseOrderDAO{
             Account_Payable__c ap = new Account_Payable__c();
             //ap.Name = po.Name;
             ap.Purchase_Order__c = po.id;
+            System.debug('purchase order iD => ' + ap.Purchase_Order__c);
             ap.Project__c = po.Project__c;
             ap.Vendor__c = po.Vendor__c;
 

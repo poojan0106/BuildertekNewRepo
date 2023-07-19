@@ -1,9 +1,31 @@
 <template>
+
+    <!-- spinner -->
+    <template if:true={spinnerDataTable}>
+        <div data-id="spinnerId" class="slds-spinner_container" style="overflow: hidden;">
+            <div class="spinner-main-div">
+                <div class="loader--ripple">
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <!-- spinner -->
+
+    <!-- <template if:true={isLoading}>
+        <c-show-spinner-in-gantt-component></c-show-spinner-in-gantt-component>
+    </template> -->
+
     <div class="container" lwc:dom="manual"></div>
 
     <!-- pop up model for exporting schedule -->
     <template if:true={showExportPopup}>
         <c-gantt-c-s-v-export-component onhidemodel={hideModalBox} schedule-data-to-export={scheduleItemsDataList}></c-gantt-c-s-v-export-component>
+    </template>
+
+    <template if:true={showImportPopup}>
+        <c-import-schedule-line recordid={SchedulerId} onhidemodel={hideModalBox1} schedule-data-to-export={scheduleItemsDataList}></c-import-schedule-line>
     </template>
 
     <template if:true={showEditResourcePopup}>

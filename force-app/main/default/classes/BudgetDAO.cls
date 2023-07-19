@@ -2562,7 +2562,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
 
         changeOrderList = [SELECT Id, Name, buildertek__Project__c, buildertek__Description__c, buildertek__Vendor__c, buildertek__Vendor__r.Name, buildertek__CO_Number__c, buildertek__Total_Costs__c,
                             buildertek__Total_Amount_Tax__c, buildertek__Total_Amount__c FROM buildertek__Change_Order__c
-                            WHERE buildertek__Project__c =: budgetRec.buildertek__Project__c AND (buildertek__Status__c = 'Customer Approved' OR buildertek__Status__c = 'Approved') AND buildertek__Budget__c = null ORDER BY Name ASC];
+                            WHERE buildertek__Project__c =: budgetRec.buildertek__Project__c AND (buildertek__Status__c = 'Customer Approved' OR buildertek__Status__c = 'Approved' OR buildertek__Status__c = 'Customer Accepted') AND buildertek__Budget__c = null ORDER BY Name ASC];
 
         return changeOrderList;
     }

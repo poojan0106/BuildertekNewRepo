@@ -556,15 +556,19 @@ public with sharing class bryntumGanttController {
     }
 
     @AuraEnabled
-    public static String upsertDataOnSaveChanges(String scheduleRecordStr, String taskRecordsStr){
+    public static String upsertDataOnSaveChanges(String scheduleRecordStr, String taskRecordsStr, List<String> listOfRecordsToDelete){
         String msg;
         buildertek__Schedule__c scheduleRecord = (buildertek__Schedule__c)System.JSON.deserialize(scheduleRecordStr, buildertek__Schedule__c.class);
         List<buildertek__Project_Task__c> taskRecords = (List<buildertek__Project_Task__c>)System.JSON.deserialize(taskRecordsStr, List<buildertek__Project_Task__c>.class);
 
         try {
-            System.debug('scheduleRecord '+scheduleRecord);
-            for (buildertek__Project_Task__c task : taskRecords) {
-                System.debug('new tasks on save changes '+taskRecords);
+            System.debug('listOfRecordsToDelete '+listOfRecordsToDelete);
+            System.debug('listOfRecordsToDelete size '+listOfRecordsToDelete.size());
+            if (listOfRecordsToDelete.size() > 0) {
+                LIST<buildertek__Project_Task__c> taskListToDelete = [SELECT Id FROM buildertek__Project_Task__c WHERE Id IN :listOfRecordsToDelete];
+                if (taskListToDelete.size() > 0) {
+                    delete taskListToDelete;
+                }
             }
             update scheduleRecord;
             upsert taskRecords;

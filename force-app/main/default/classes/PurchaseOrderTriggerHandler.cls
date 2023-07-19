@@ -304,7 +304,9 @@ PurchaseOrderDAO.isUpdatePurchaseOrder = true;
                 }
             }
             system.debug('contractInvoiveList ==> ' + contractInvoiveList.size());
-            if(!contractInvoiveList.isEmpty() && po.buildertek__Paid_Amount__c== oldPurchaseOrdersMap.get(po.Id).buildertek__Paid_Amount__c){
+            system.debug('oldPurchaseOrdersMap.get(po.Id).buildertek__Date_Approved__c => ' + oldPurchaseOrdersMap.get(po.Id).buildertek__Date_Approved__c);
+            system.debug('po.buildertek__Date_Approved__c => ' + po.buildertek__Date_Approved__c);
+            if(!contractInvoiveList.isEmpty() && po.buildertek__Paid_Amount__c== oldPurchaseOrdersMap.get(po.Id).buildertek__Paid_Amount__c && !PurchaseOrderDAO.isInvoiceCreated){
                 po.addError('You cannot update this Purchase Order because there is a Contract Invoice associated with it.  If you would like to change this Purchase Order, please remove the Contract Invoice first.');
             }
         }

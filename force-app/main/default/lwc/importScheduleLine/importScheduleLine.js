@@ -1,7 +1,7 @@
-import { LightningElement, track } from "lwc";
+import { LightningElement, track, api } from "lwc";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import insertData from "@salesforce/apex/importScheduleLineController.insertData";
-export default class FileUploadComponent extends LightningElement {
+export default class importScheduleLine extends LightningElement {
     fileName;
     fileContent;
     showError = false;
@@ -9,7 +9,7 @@ export default class FileUploadComponent extends LightningElement {
     showMessage;
     @track files;
     @track isOpen;
-    @track RecordId;
+    @api recordid;
     // @track BaseURLs;
     // @track isNewGantt;
 
@@ -282,13 +282,14 @@ export default class FileUploadComponent extends LightningElement {
 
     CreateAccount(jsonstr) {
         const jsonData = JSON.parse(jsonstr);
-        const recordId = this.RecordId;
+        const recordId = this.recordid;
         // const action = this.insertData;
         console.log("CSV File:", JSON.stringify(jsonData));
+        let dummyRecordId = 'a101K00000GobT6QAJ';
 
         insertData({
-            // recordId: this.RecordId,
-            recordId: "a101K00000GodXbQAJ",
+            // recordId: this.recordid,
+            recordId: dummyRecordId,
             strFileData: JSON.stringify(jsonData),
         })
             .then((response) => {
@@ -314,59 +315,59 @@ export default class FileUploadComponent extends LightningElement {
                         });
                         this.dispatchEvent(toastEvent);
 
-                        if (this.isNewGantt) {
-                            const workspaceAPI = this.template.querySelector(
-                                "lightning-navigation"
-                            );
-                            if (workspaceAPI) {
-                                workspaceAPI
-                                    .getFocusedTabInfo()
-                                    .then((response) => {
-                                        const focusedTabId = response.tabId;
-                                        workspaceAPI
-                                            .closeTab({ tabId: focusedTabId })
-                                            .then((res) => {
-                                                window.setTimeout(() => {
-                                                    window.open("/" + recordId, "_top");
-                                                    location.reload();
-                                                }, 2000);
-                                                if (workspaceAPI.getFocusedTabInfo()) {
-                                                    workspaceAPI
-                                                        .getFocusedTabInfo()
-                                                        .then((response) => {
-                                                            const focusedTabId = response.tabId;
-                                                            window.setTimeout(() => {
-                                                                window.open("/" + recordId, "_top");
-                                                                location.reload();
-                                                            }, 2000);
-                                                        })
-                                                        .catch((error) => {
-                                                            console.log(error);
-                                                        });
-                                                }
-                                            });
-                                    })
-                                    .catch((error) => {
-                                        console.log(error);
-                                        const navEvt = new CustomEvent("navigate", {
-                                            detail: {
-                                                recordId: recordId,
-                                                slideDevName: "detail",
-                                            },
-                                        });
-                                        window.setTimeout(() => {
-                                            location.reload();
-                                        }, 500);
-                                        this.dispatchEvent(navEvt);
-                                    });
-                            } else {
-                                window.open("/" + recordId, "_top");
-                            }
-                        } else {
-                            // window.open('/apex/BT_Task_Manager?recordId=' + escape(recordId), '_self');
-                            debugger;
-                            window.open("/a101K00000GodXbQAJ", "_self");
-                        }
+                        // if (this.isNewGantt) {
+                        //     const workspaceAPI = this.template.querySelector(
+                        //         "lightning-navigation"
+                        //     );
+                        //     if (workspaceAPI) {
+                        //         workspaceAPI
+                        //             .getFocusedTabInfo()
+                        //             .then((response) => {
+                        //                 const focusedTabId = response.tabId;
+                        //                 workspaceAPI
+                        //                     .closeTab({ tabId: focusedTabId })
+                        //                     .then((res) => {
+                        //                         window.setTimeout(() => {
+                        //                             window.open("/" + recordId, "_top");
+                        //                             location.reload();
+                        //                         }, 2000);
+                        //                         if (workspaceAPI.getFocusedTabInfo()) {
+                        //                             workspaceAPI
+                        //                                 .getFocusedTabInfo()
+                        //                                 .then((response) => {
+                        //                                     const focusedTabId = response.tabId;
+                        //                                     window.setTimeout(() => {
+                        //                                         window.open("/" + recordId, "_top");
+                        //                                         location.reload();
+                        //                                     }, 2000);
+                        //                                 })
+                        //                                 .catch((error) => {
+                        //                                     console.log(error);
+                        //                                 });
+                        //                         }
+                        //                     });
+                        //             })
+                        //             .catch((error) => {
+                        //                 console.log(error);
+                        //                 const navEvt = new CustomEvent("navigate", {
+                        //                     detail: {
+                        //                         recordId: recordId,
+                        //                         slideDevName: "detail",
+                        //                     },
+                        //                 });
+                        //                 window.setTimeout(() => {
+                        //                     location.reload();
+                        //                 }, 500);
+                        //                 this.dispatchEvent(navEvt);
+                        //             });
+                        //     } else {
+                        //         window.open("/" + recordId, "_top");
+                        //     }
+                        // } else {
+                        //     // window.open('/apex/BT_Task_Manager?recordId=' + escape(recordId), '_self');
+                        //     debugger;
+                        //     window.open("/"+dummyRecordId, "_self");
+                        // }
                     } else {
                         this.Spinner = false;
                         this.showMessage = false;
@@ -383,6 +384,14 @@ export default class FileUploadComponent extends LightningElement {
                         this.dispatchEvent(toastEvent);
                     }
                 } else {
+                    console.log('state ==> ',state);
+                    const evt = new ShowToastEvent({
+                        title: 'Toast Error',
+                        message: 'Some unexpected error',
+                        variant: 'error',
+                        mode: 'dismissable'
+                    });
+                    this.dispatchEvent(evt);
                     this.Spinner = false;
                     console.error(response.getError());
                 }

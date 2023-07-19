@@ -1,17 +1,7 @@
 /* globals bryntum : true */
-import {
-  api,
-  LightningElement,
-  track,
-  wire
-} from "lwc";
-import {
-  ShowToastEvent
-} from "lightning/platformShowToastEvent";
-import {
-  loadScript,
-  loadStyle
-} from "lightning/platformResourceLoader";
+import { api, LightningElement, track, wire } from "lwc";
+import { ShowToastEvent } from "lightning/platformShowToastEvent";
+import { loadScript, loadStyle } from "lightning/platformResourceLoader";
 
 import GanttStyle from "@salesforce/resourceUrl/BT_Bryntum_NewGanttCss";
 import GANTTModule from "@salesforce/resourceUrl/BT_Bryntum_NewGantt_ModuleJS";
@@ -23,21 +13,22 @@ import scheduleWrapperDataFromApex from "@salesforce/apex/bryntumGanttController
 import saveResourceForRecord from "@salesforce/apex/bryntumGanttController.saveResourceForRecord";
 import upsertDataOnSaveChanges from "@salesforce/apex/bryntumGanttController.upsertDataOnSaveChanges";
 import getPickListValuesIntoList from "@salesforce/apex/bryntumGanttController.getPickListValuesIntoList";
-import {
-  formatApexDatatoJSData
-} from "./gantt_componentHelper";
-import {
-  populateIcons
-} from "./lib/BryntumGanttIcons";
+import { formatApexDatatoJSData, recordsTobeDeleted } from "./gantt_componentHelper";
+import { populateIcons } from "./lib/BryntumGanttIcons";
 import bryntum_gantt from "@salesforce/resourceUrl/bryntum_gantt";
 
 export default class Gantt_component extends LightningElement {
+
+  @track spinnerDataTable = false;
+
   @track islibraryloaded = false;
   @track scheduleItemsDataList;
   @track scheduleData;
   @track scheduleItemsData;
   @api SchedulerId;
+  @api isLoading = false;
   @api showExportPopup;
+  @api showImportPopup;
   @api recordId;
   @api taskRecordId;
   @track showContractor = false;
@@ -110,30 +101,33 @@ export default class Gantt_component extends LightningElement {
     buildertek__Add_To_All_Active_Schedules__c: "",
   };
 
-
   connectedCallback() {
     console.log("Connected Callback new gantt chart");
     console.log("ReocrdID:- ", this.recordId);
+    
+    // this.handleShowSpinner();
+    
     if (this.SchedulerId == null || this.SchedulerId == undefined) {
       if (this.recordId == null || this.recordId == undefined) {
         // this.SchedulerId = "a2zDm0000004bPuIAI"; // trail org
-        this.SchedulerId = 'a101K00000GobT6QAJ' // New
-          // this.SchedulerId = 'a101K00000GobTCQAZ' // Old
+        this.SchedulerId = "a101K00000GobT6QAJ"; // New
+        // this.SchedulerId = 'a101K00000GobTCQAZ' // Old
       } else {
         this.SchedulerId = this.recordId;
       }
     } else {
       console.log("SchedulerId :- ", this.SchedulerId);
     }
+    this.loadLibraries();
     let intervalID = setInterval(() => {
       if (this.bryntumInitialized) {
         return;
       }
+      //this.spinnerDataTable = true;
       this.bryntumInitialized = true;
-      this.loadLibraries();
+      this.getPickListValuesIntoListFromApex();
+      this.getScheduleWrapperDataFromApex();
     }, 1500);
-    this.getPickListValuesIntoListFromApex();
-    this.getScheduleWrapperDataFromApex();
   }
 
   renderedCallback() {
@@ -148,15 +142,16 @@ export default class Gantt_component extends LightningElement {
 
   loadLibraries() {
     Promise.all([
-      console.log('Lodding libraries'),
+      console.log("Lodding libraries"),
       // loadScript(this, GANTT + "/gantt.lwc.module.min.js"),
       // loadStyle(this, GANTT + "/gantt.stockholm-1.css"),
       loadScript(this, GANTTModule),
       loadStyle(this, GanttStyle + "/gantt.stockholm.css"),
-      console.log('Loaded libraries'),
+      console.log("Loaded libraries"),
       // loadStyle(this, GanttStyle + "/gantt.stockholm.css")
     ])
       .then(() => {
+        // this.handleHideSpinner();
         console.log("lib loaded");
         this.islibraryloaded = true;
       })
@@ -165,7 +160,7 @@ export default class Gantt_component extends LightningElement {
           new ShowToastEvent({
             title: "Error loading Bryntum Gantt",
             message: error,
-            variant: "error"
+            variant: "error",
           })
         );
       });
@@ -173,18 +168,21 @@ export default class Gantt_component extends LightningElement {
 
   getScheduleWrapperDataFromApex() {
     scheduleWrapperDataFromApex({
-      scheduleid: this.SchedulerId
+      scheduleid: this.SchedulerId,
     })
       .then((response) => {
         console.log("response ", JSON.parse(JSON.stringify(response)));
         var records = response;
         console.log({
-          records
+          records,
         });
         var data = response.lstOfSObjs;
         console.log("data-->", data);
         this.scheduleItemsDataList = response.lstOfSObjs;
-        console.log("scheduleItemsDataList", JSON.parse(JSON.stringify(this.scheduleItemsDataList)));
+        console.log(
+          "scheduleItemsDataList",
+          JSON.parse(JSON.stringify(this.scheduleItemsDataList))
+        );
         this.scheduleData = response.scheduleObj;
         console.log("scheduleData", this.scheduleData);
         // that.storeRes = response.filesandattacmentList;
@@ -224,7 +222,7 @@ export default class Gantt_component extends LightningElement {
               taskMap.has(scheduleItemsList[i].buildertek__Phase__c) &&
               i == taskMap.get(scheduleItemsList[i].buildertek__Phase__c) &&
               scheduleItemsMap.get(scheduleItemsList[i].buildertek__Phase__c) !=
-              undefined
+                undefined
             ) {
               scheduleItemsListClone.push(
                 scheduleItemsMap.get(scheduleItemsList[i].buildertek__Phase__c)
@@ -288,6 +286,7 @@ export default class Gantt_component extends LightningElement {
           this.createGanttChartInitially();
           // this.createGantt();
           this.isLoaded = false;
+          this.handleHideSpinner()
         }
       })
       .catch((error) => {
@@ -298,71 +297,22 @@ export default class Gantt_component extends LightningElement {
       });
   }
 
-  getPickListValuesIntoListFromApex(){
+  getPickListValuesIntoListFromApex() {
     getPickListValuesIntoList()
-    .then((result) => {
-      console.log("lib loaded");
-      this.phaseNameList = result;
-    })
-    .catch((error) => {
-      this.dispatchEvent(
-        new ShowToastEvent({
-          title: "Error getting Phase data Bryntum Gantt",
-          message: error,
-          variant: "error"
-        })
-      );
-    });
-  }
-
-  addNewTaskToSchedule(record){
-    var newTaskeDate;
-    var dt;
-    Object.assign(this.newTaskRecordCreate, this.newTaskRecordClone);
-    if (record) {
-      console.log({
-        record,
+      .then((result) => {
+        console.log("lib loaded");
+        this.phaseNameList = result;
+      })
+      .catch((error) => {
+        this.dispatchEvent(
+          new ShowToastEvent({
+            title: "Error getting Phase data Bryntum Gantt",
+            message: error,
+            variant: "error",
+          })
+        );
       });
-      if (record._data.type == "Task") {
-        this.newTaskRecordCreate["buildertek__Dependency__c"] = record._data.id;
-        this.newTaskRecordCreate["buildertek__Order__c"] = record._data.order;
-      }
-      if (record._data.phase) {
-        this.newTaskRecordCreate["buildertek__Phase__c"] =
-          record._data.phase != "null" ? record._data.phase : "";
-      } else if (record._data.type == "Phase") {
-        this.newTaskRecordCreate["buildertek__Phase__c"] = record._data.name;
-      }
-
-      dt = record._data.endDate;
-    }
-    this.showEditPopup = true;
-    this.taskRecordId = "";
-    this.newTaskRecordCreate["Name"] = "";
-    if (record && record._data.endDate && record._data.type == "Task") {
-      dt = record._data.endDate;
-    } else {
-      dt = new Date();
-      newTaskeDate = new Date().toLocaleDateString().split("/");
-    }
-    if (dt.getDay() == 6) {
-      dt.setDate(dt.getDate() + 2);
-    }
-    if (dt.getDay() == 0) {
-      dt.setDate(dt.getDate() + 1);
-    }
-    newTaskeDate = dt.toLocaleDateString().split("/");
-    this.newTaskRecordCreate["buildertek__Start__c"] =
-    dt.getFullYear() + "-" + Number(dt.getMonth() + 1) + "-" + dt.getDate();
-    this.newTaskRecordCreate["buildertek__Duration__c"] = 1;
-    this.newTaskRecordCreate["buildertek__Finish__c"] =
-    this.newTaskRecordCreate["buildertek__Start__c"];
-    this.newTaskRecordCreate["buildertek__Completion__c"] = 0;
-    this.newTaskRecordCreate["buildertek__Lag__c"] = 0;
-    this.blankPredecessor = false;
-
   }
-
 
   handleAccountSelection(event) {
     if (event.detail.fieldNameapi == "buildertek__Dependency__c") {
@@ -407,9 +357,9 @@ export default class Gantt_component extends LightningElement {
         console.log("^ In If ^");
         that.showContractor = false; //Added for contractor
         this.isLoaded = true;
-        console.log('taskRecordId:-', this.taskRecordId);
-        console.log('selectedResourceAccount:-', this.selectedResourceAccount);
-        console.log('contracFieldApiName:-', this.contracFieldApiName);
+        console.log("taskRecordId:-", this.taskRecordId);
+        console.log("selectedResourceAccount:-", this.selectedResourceAccount);
+        console.log("contracFieldApiName:-", this.contracFieldApiName);
         saveResourceForRecord({
           taskId: this.taskRecordId,
           resourceId: this.selectedResourceAccount,
@@ -480,17 +430,20 @@ export default class Gantt_component extends LightningElement {
 
   //populateIconsOnExpandCollapse
   populateIconsOnExpandCollapse(source) {
-    console.log('in populateiconsonexpandcollapse');
-    console.log('template queryselector :- ', this.template.querySelector('[data-id="' + source.record.id + '"]'));
+    console.log("in populateiconsonexpandcollapse");
+    console.log(
+      "template queryselector :- ",
+      this.template.querySelector('[data-id="' + source.record.id + '"]')
+    );
     var rowPhaseElement = this.template.querySelector(
       '[data-id="' + source.record.id + '"]'
     );
-    console.log('rowPhaseElement :- ', rowPhaseElement);
+    console.log("rowPhaseElement :- ", rowPhaseElement);
     if (rowPhaseElement && rowPhaseElement.innerHTML) {
-      console.log('In Here first if condition');
+      console.log("In Here first if condition");
       var iconElement = "";
       if (source.record.type == "Phase") {
-        console.log('In Here phase if condition');
+        console.log("In Here phase if condition");
         iconElement = `<span class="slds-icon_container slds-icon-custom-custom62" >
         <svg aria-hidden="true" class="slds-icon slds-icon-text-default" style="fill: white !important;height:1.3rem;width:1.3rem;">
         <use xmlns:xlink=" http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/custom-sprite/svg/symbols.svg#custom62">
@@ -508,7 +461,7 @@ export default class Gantt_component extends LightningElement {
           }
         }
       } else if (source.record.type == "Project") {
-        console.log('In Here Project if condition');
+        console.log("In Here Project if condition");
         iconElement = `<span class="slds-icon_container slds-icon-custom-custom70" >
                                         <svg aria-hidden="true" class="slds-icon slds-icon-text-default" style="fill: white !important;height:1.3rem;width:1.3rem;">
                                         <use xmlns:xlink=" http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/custom-sprite/svg/symbols.svg#custom70">
@@ -529,11 +482,10 @@ export default class Gantt_component extends LightningElement {
     }
   }
 
-  addtaskeventcall(taskrecord){
-    console.log('In addtaskeventcall method');
+  addtaskeventcall(taskrecord) {
+    console.log("In addtaskeventcall method");
     console.log(taskrecord);
   }
-
 
   createGanttChartInitially() {
     const GanttToolbar = GanttToolbarMixin(bryntum.gantt.Toolbar);
@@ -548,15 +500,12 @@ export default class Gantt_component extends LightningElement {
 
     var scheduleDataList = this.scheduleItemsDataList;
     console.log("scheduleDataList ==> ", {
-      scheduleDataList
+      scheduleDataList,
     });
 
-
-    console.log("scheduleDataList after logic changed ", {
-      scheduleDataList
-    });
+    console.log("scheduleDataList after logic changed ", JSON.parse(JSON.stringify(scheduleDataList)));
     this.scheduleItemsDataList = scheduleDataList;
-
+    console.log("scheduleItemsData :--- ",this.scheduleItemsData)
     var formatedSchData = formatApexDatatoJSData(
       this.scheduleData,
       this.scheduleItemsData,
@@ -565,7 +514,7 @@ export default class Gantt_component extends LightningElement {
 
     console.log("=== formatedSchData ===");
     console.log({
-      formatedSchData
+      formatedSchData,
     });
 
     tasks["rows"] = formatedSchData["rows"];
@@ -574,6 +523,8 @@ export default class Gantt_component extends LightningElement {
     taskDependencyData = formatedSchData["taskDependencyData"];
     resourceRowData = formatedSchData["resourceRowData"];
     assignmentRowData = formatedSchData["assignmentRowData"];
+
+    // //this.spinnerDataTable = false;
 
     const project = new bryntum.gantt.ProjectModel({
       calendar: data.project.calendar,
@@ -587,7 +538,7 @@ export default class Gantt_component extends LightningElement {
       assignmentsData: assignmentRowData,
       // dependenciesData: data.dependencies.rows,
       dependenciesData: taskDependencyData,
-      calendarsData: data.calendars.rows
+      calendarsData: data.calendars.rows,
     });
 
     console.log("project:-", project);
@@ -600,219 +551,203 @@ export default class Gantt_component extends LightningElement {
       tbar: new GanttToolbar(),
 
       dependencyIdField: "sequenceNumber",
-      columns: [{
-        type: "wbs"
-      },
-      {
-        type: "name",
-        width: 250,
-        renderer: (record) => {
-          populateIcons(record);
-          if (record.record._data.type == "Phase") {
-            record.cellElement.style.margin = "";
-          }
-          if (
-            record.record._data.iconCls == "b-fa b-fa-arrow-right indentTrue"
-          ) {
-            record.cellElement.style.margin = '0 0 0 1.5rem';
-          }
-          if (record.record._data.name == "Milestone Complete") {
-            return "Milestone";
-          } else {
-            return record.value;
-          }
-        }
-      },
-      {
-        type: "startdate",
-        allowedUnits: "datetime"
-      },
-      {
-        type: "duration",
-        allowedUnits: "day"
-      },
-      {
-        type: "percentdone",
-        showCircle: true,
-        width: 70
-      },
-      {
-        type: "predecessor",
-        width: 120,
-        editor: {
-          multipleSelection: false,
+      columns: [
+        {
+          type: "wbs",
         },
-        renderer: (record) => {
-          populateIcons(record);
-          if (record.record._data.type == "Project") {
-            return "";
-          }
-          if (record.record._data.type == "Phase") {
-            return "";
-          }
-          if (record.record._data.name == "Milestone Complete") {
-            return "";
-          } else {
-            return record.record._data.predecessorName;
-          }
-        }
-      },
-      {
-        text: "Internal Resource",
-        type: "resourceassignment",
-        width: 120,
-        editor: false,
-        items: {
-          Test1: "Test1",
-          Test2: "Test2"
+        {
+          type: "name",
+          width: 250,
+          renderer: (record) => {
+            populateIcons(record);
+            if (record.record._data.type == "Phase") {
+              record.cellElement.style.margin = "";
+            }
+            if (
+              record.record._data.iconCls == "b-fa b-fa-arrow-right indentTrue"
+            ) {
+              record.cellElement.style.margin = "0 0 0 1.5rem";
+            }
+            if (record.record._data.name == "Milestone Complete") {
+              return "Milestone";
+            } else {
+              return record.value;
+            }
+          },
         },
-        renderer: function (record) {
-          populateIcons(record);
-          if (
-            record.record._data.type == "Task" &&
-            record.record._data.name != "Milestone Complete"
-          ) {
-            if (record.record._data.internalresource) {
-              record.cellElement.classList.add("b-resourceassignment-cell");
-              record.cellElement.innerHTML = `<div class="b-assignment-chipview-wrap">
+        {
+          type: "startdate",
+          allowedUnits: "datetime",
+        },
+        {
+          type: "duration",
+          allowedUnits: "day",
+        },
+        {
+          type: "percentdone",
+          showCircle: true,
+          width: 70,
+        },
+        {
+          type: "predecessor",
+          width: 120,
+          editor: {
+            multipleSelection: false,
+          },
+          renderer: (record) => {
+            populateIcons(record);
+            if (record.record._data.type == "Project") {
+              return "";
+            }
+            if (record.record._data.type == "Phase") {
+              return "";
+            }
+            if (record.record._data.name == "Milestone Complete") {
+              return "";
+            } else {
+              return record.record._data.predecessorName;
+            }
+          },
+        },
+        {
+          text: "Internal Resource",
+          width: 120,
+          editor: false,
+          renderer: function (record) {
+            populateIcons(record);
+            if (
+              record.record._data.type == "Task" &&
+              record.record._data.name != "Milestone Complete"
+            ) {
+              if (record.record._data.internalresource) {
+                record.cellElement.classList.add("b-resourceassignment-cell");
+                record.cellElement.innerHTML = `<div class="b-assignment-chipview-wrap">
                                   <div class="b-assignment-chipview b-widget b-list b-chipview b-outer b-visible-scrollbar b-chrome b-no-resizeobserver b-widget-scroller b-hide-scroll" tabindex="0" style="overflow-x: auto;" >
                                       <div class="b-chip" data-index="0" data-isinternalresource="true" > ${record.record._data.internalresourcename}</div>
                                       <i id="editInternalResource" data-resource="${record.record._data.internalresource}" class="b-action-item b-fa b-fa-pen" style="font-size:1rem;color:#cfd1d3;margin-left:0.2rem;" id="editInternalResource" ></i>
                                       </div>
                               </div>`;
-            } else {
-              record.cellElement.innerHTML = `
+              } else {
+                record.cellElement.innerHTML = `
                               <i  class="b-action-item b-fa b-fa-user-plus addinternalresource" style="font-size:1rem;color:#cfd1d3;margin-left:0.2rem;"  ></i>
                               `;
+              }
+            } else {
+              record.cellElement.innerHTML = `<span></span>`;
             }
-          } else {
-            record.cellElement.innerHTML = `<span></span>`;
-          }
+          },
+          filterable: ({ record, value, operator }) => {
+            if (record._data.internalresourcename && value) {
+              if (
+                record._data.internalresourcename
+                  .toUpperCase()
+                  .indexOf(value.toUpperCase()) > -1
+              ) {
+                return true;
+              }
+            }
+          },
         },
-        filterable: ({
-          record,
-          value,
-          operator
-        }) => {
-          if (record._data.internalresourcename && value) {
-            if (
-              record._data.internalresourcename
-                .toUpperCase()
-                .indexOf(value.toUpperCase()) > -1
-            ) {
-              return true;
-            }
-          }
-        }
-      },
-      //Added for Contractor
-      {
-        text: "Contractor",
-        width: 120,
-        editor: false,
-        renderer: function (record) {
-          populateIcons(record);
+        //Added for Contractor
+        {
+          text: "Contractor",
+          width: 120,
+          editor: false,
+          renderer: function (record) {
+            populateIcons(record);
 
-          if (
-            record.record._data.type == "Task" &&
-            record.record._data.name != "Milestone Complete"
-          ) {
-            if (record.record._data.contractoracc) {
-              record.cellElement.classList.add("b-resourceassignment-cell");
-              record.cellElement.innerHTML = `<div id="" class="b-assignment-chipview-wrap">
+            if (
+              record.record._data.type == "Task" &&
+              record.record._data.name != "Milestone Complete"
+            ) {
+              if (record.record._data.contractoracc) {
+                record.cellElement.classList.add("b-resourceassignment-cell");
+                record.cellElement.innerHTML = `<div id="" class="b-assignment-chipview-wrap">
                                   <div class="b-assignment-chipview b-widget b-list b-chipview b-outer b-visible-scrollbar b-chrome b-no-resizeobserver b-widget-scroller b-hide-scroll" tabindex="0" style="overflow-x: auto;" >
                                       <div class="b-chip" data-index="0" data-isinternalres="false" > ${record.record._data.contractorname}</div>
                                       <i id="editcontractor" data-resource="${record.record._data.contractorname}" class="b-action-item b-fa b-fa-pen" style="font-size:1rem;color:#cfd1d3;margin-left:0.2rem;"  ></i>
                                       </div>
                               </div>`;
-            } else {
-              record.cellElement.innerHTML = `
+              } else {
+                record.cellElement.innerHTML = `
                               <i  class="b-action-item b-fa b-fa-user-plus addcontractor" style="font-size:1rem;color:#cfd1d3;margin-left:0.2rem;"  ></i>
                               `;
+              }
+            } else {
+              record.cellElement.innerHTML = `<span></span>`;
             }
-          } else {
-            record.cellElement.innerHTML = `<span></span>`;
-          }
+          },
+          filterable: ({ record, value, operator }) => {
+            if (record._data.contractorresourcename && value) {
+              if (
+                record._data.contractorresourcename
+                  .toUpperCase()
+                  .indexOf(value.toUpperCase()) > -1
+              ) {
+                return true;
+              }
+            }
+          },
         },
-        filterable: ({
-          record,
-          value,
-          operator
-        }) => {
-          if (record._data.contractorresourcename && value) {
+        {
+          text: "Contractor Resource",
+          width: 110,
+          editor: false,
+          renderer: function (record) {
+            populateIcons(record);
             if (
-              record._data.contractorresourcename
-                .toUpperCase()
-                .indexOf(value.toUpperCase()) > -1
+              record.record._data.type == "Task" &&
+              record.record._data.name != "Milestone Complete"
             ) {
-              return true;
-            }
-          }
-        }
-      },
-      {
-        text: "Contractor Resource",
-        width: 110,
-        editor: false,
-        renderer: function (record) {
-          populateIcons(record);
-          if (
-            record.record._data.type == "Task" &&
-            record.record._data.name != "Milestone Complete"
-          ) {
-            if (record.record._data.contractorresource) {
-              record.cellElement.classList.add("b-resourceassignment-cell");
-              record.cellElement.innerHTML = `<div id="" class="b-assignment-chipview-wrap">
+              if (record.record._data.contractorresource) {
+                record.cellElement.classList.add("b-resourceassignment-cell");
+                record.cellElement.innerHTML = `<div id="" class="b-assignment-chipview-wrap">
                                   <div class="b-assignment-chipview b-widget b-list b-chipview b-outer b-visible-scrollbar b-chrome b-no-resizeobserver b-widget-scroller b-hide-scroll" tabindex="0" style="overflow-x: auto;" >
                                       <div class="b-chip" data-index="0" data-isinternalres="false" > ${record.record._data.contractorresourcename}</div>
                                       <i id="editcontractorResource" data-resource="${record.record._data.contractorresource}" class="b-action-item b-fa b-fa-pen" style="font-size:1rem;color:#cfd1d3;margin-left:0.2rem;"  ></i>
                                       </div>
                               </div>`;
-            } else {
-              record.cellElement.innerHTML = `
+              } else {
+                record.cellElement.innerHTML = `
                               <i  class="b-action-item b-fa b-fa-user-plus addcontractorresource" style="font-size:1rem;color:#cfd1d3;margin-left:0.2rem;"  ></i>
                               `;
+              }
+            } else {
+              record.cellElement.innerHTML = `<span></span>`;
             }
-          } else {
-            record.cellElement.innerHTML = `<span></span>`;
-          }
+          },
+          filterable: ({ record, value, operator }) => {
+            if (record._data.contractorresourcename && value) {
+              if (
+                record._data.contractorresourcename
+                  .toUpperCase()
+                  .indexOf(value.toUpperCase()) > -1
+              ) {
+                return true;
+              }
+            }
+          },
         },
-        filterable: ({
-          record,
-          value,
-          operator
-        }) => {
-          if (record._data.contractorresourcename && value) {
-            if (
-              record._data.contractorresourcename
-                .toUpperCase()
-                .indexOf(value.toUpperCase()) > -1
-            ) {
-              return true;
-            }
-          }
-        }
-      },
-      // {
-      //   type: "schedulingmodecolumn"
-      // },
-      // {
-      //   type: "calendar"
-      // },
-      // {
-      //   type: "constrainttype"
-      // },
-      {
-        type: "addnew"
-      }
+        // {
+        //   type: "schedulingmodecolumn"
+        // },
+        // {
+        //   type: "calendar"
+        // },
+        // {
+        //   type: "constrainttype"
+        // },
+        {
+          type: "addnew",
+        },
       ],
 
       subGridConfigs: {
         locked: {
-          flex: 3
+          flex: 3,
         },
         normal: {
-          flex: 4
+          flex: 4,
         },
       },
 
@@ -821,27 +756,27 @@ export default class Gantt_component extends LightningElement {
       features: {
         rowReorder: false,
         rollups: {
-          disabled: true
+          disabled: true,
         },
         baselines: {
-          disabled: true
+          disabled: true,
         },
         progressLine: {
           disabled: true,
-          statusDate: new Date(2019, 0, 25)
+          statusDate: new Date(2019, 0, 25),
         },
         filter: true,
         dependencyEdit: true,
         timeRanges: {
-          showCurrentTimeLine: true
+          showCurrentTimeLine: true,
         },
         labels: {
           left: {
             field: "name",
             editor: {
-              type: "textfield"
-            }
-          }
+              type: "textfield",
+            },
+          },
         },
         taskEdit: {
           items: {
@@ -851,26 +786,24 @@ export default class Gantt_component extends LightningElement {
                 effort: false,
                 divider: false,
                 newCustomField: {
-                  type: 'Combo',
+                  type: "Combo",
                   weight: 200,
-                  label: 'Phase',
+                  label: "Phase",
                   items: this.phaseNameList,
-                  name: 'Phase'
-                }
-              }
+                  name: "NewPhase",
+                },
+              },
             },
             // Remove all tabs except the "General" tab
             successorsTab: false,
             resourcesTab: false,
-            advancedTab: false
-          }
+            advancedTab: false,
+          },
         },
-      }
+      },
     });
 
-    gantt.on("cellClick", ({
-      record
-    }) => {
+    gantt.on("cellClick", ({ record }) => {
       gantt.scrollTaskIntoView(record);
     });
 
@@ -881,7 +814,7 @@ export default class Gantt_component extends LightningElement {
     gantt.on("addSuccessor", (event) => {
       // Get the data of the new task.
       const taskData = event.task;
-      
+
       debugger;
       // Do something with the data.
       console.log("New task data: ", taskData);
@@ -894,14 +827,13 @@ export default class Gantt_component extends LightningElement {
           if (event.target.dataset.resource) {
             this.taskRecordId = event.record._data.id;
             this.showEditResourcePopup = true;
-            console.log('taskReocrdId:=- ' + this.taskRecordId);
+            console.log("taskReocrdId:=- " + this.taskRecordId);
             this.selectedContactApiName = "buildertek__Resource__c";
-            this.selectedResourceContact =
-              event.record._data.internalresource;
+            this.selectedResourceContact = event.record._data.internalresource;
           }
         } else if (event.target.classList.contains("addinternalresource")) {
           this.taskRecordId = event.record._data.id;
-          console.log('taskReocrdId:=- ' + this.taskRecordId);
+          console.log("taskReocrdId:=- " + this.taskRecordId);
           this.showEditResourcePopup = true;
           this.selectedContactApiName = "buildertek__Resource__c";
           this.selectedResourceContact = "";
@@ -912,14 +844,14 @@ export default class Gantt_component extends LightningElement {
         if (event.target.id == "editcontractor") {
           if (event.target.dataset.resource) {
             this.taskRecordId = event.record._data.id;
-            console.log('taskReocrdId:=- ' + this.taskRecordId);
+            console.log("taskReocrdId:=- " + this.taskRecordId);
             this.showContractor = true;
             this.selectedContactApiName = "buildertek__Contractor__c";
             this.selectedResourceAccount = event.record._data.contractoracc;
           }
         } else if (event.target.classList.contains("addcontractor")) {
           this.taskRecordId = event.record._data.id;
-          console.log('taskReocrdId:=- ' + this.taskRecordId);
+          console.log("taskReocrdId:=- " + this.taskRecordId);
           this.showContractor = true;
           this.selectedContactApiName = "buildertek__Contractor__c";
           this.selectedResourceAccount = "";
@@ -930,22 +862,20 @@ export default class Gantt_component extends LightningElement {
           if (event.target.dataset.resource) {
             this.taskRecordId = event.record._data.id;
             this.showEditResourcePopup = true;
-            console.log('taskReocrdId:=- ' + this.taskRecordId);
-            this.selectedContactApiName =
-              "buildertek__Contractor_Resource__c";
+            console.log("taskReocrdId:=- " + this.taskRecordId);
+            this.selectedContactApiName = "buildertek__Contractor_Resource__c";
             this.selectedResourceContact =
               event.record._data.contractorresource;
           }
         } else if (event.target.classList.contains("addcontractorresource")) {
           this.taskRecordId = event.record._data.id;
           this.showEditResourcePopup = true;
-          console.log('taskReocrdId:=- ' + this.taskRecordId);
+          console.log("taskReocrdId:=- " + this.taskRecordId);
           this.selectedContactApiName = "buildertek__Contractor_Resource__c";
           this.selectedResourceContact = "";
         }
       }
     });
-
 
     gantt.on("expandnode", (source) => {
       // populateIcons(record);
@@ -956,30 +886,18 @@ export default class Gantt_component extends LightningElement {
       this.populateIconsOnExpandCollapse(source);
     });
 
-    gantt.on('gridRowDrop', (record) => {
-      console.log('event', {
-        record
+    gantt.on("gridRowDrop", (record) => {
+      console.log("event", {
+        record,
       });
-      console.log('log :- ', record._data.type);
-      // var droppedRecord = event.records; // The record being dropped
-      // var targetRecord = event.targetRecord; // The record on which the drop occurred
-      // var position = event.position; // The position where the record was dropped (e.g., 'before', 'after', 'child')
-      // var draggedRow = event.draggedRow;
-      // var droppedRow = event.droppedRow;
-      // // Perform your custom logic here based on the dropped record, target record, and position
-      // console.log('draggedRow :',draggedRow);
-      // console.log('droppedRow :',droppedRow);
-      // console.log('Dropped Record:', droppedRecord);
-      // console.log('Target Record:', targetRecord);
-      // console.log('Position:', position);
+      console.log("log :- ", record._data.type);
 
       // Example logic: If the dropped record should be added as a child of the target record
-      if (position === 'child') {
+      if (position === "child") {
         // Add the dropped record as a child of the target record
         targetRecord.appendChild(droppedRecord);
       }
     });
-
 
     project.commitAsync().then(() => {
       // console.timeEnd("load data");
@@ -1005,20 +923,19 @@ export default class Gantt_component extends LightningElement {
 
   //* calling this method on save changes
   saveChanges(scheduleData, taskData) {
+    // this.handleShowSpinner();
+    let listOfRecordsToDelete = recordsTobeDeleted(this.scheduleItemsDataList,taskData);//!helper method to get list of string to delete
     var that = this;
     upsertDataOnSaveChanges({
       scheduleRecordStr: JSON.stringify(scheduleData),
       taskRecordsStr: JSON.stringify(taskData),
+      listOfRecordsToDelete: listOfRecordsToDelete
     })
       .then(function (response) {
-        console.log('response ',{response});
-        // const filterChangeEvent = new CustomEvent("filterchange", {
-        //   detail: {
-        //     message: "refresh page",
-        //   },
-        // });
-        // that.isLoaded = false;
-        // that.dispatchEvent(filterChangeEvent);
+        console.log("response ", { response });
+        that.connectedCallback();
+        that.handleHideSpinner();
+        // that.getScheduleWrapperDataFromApex();
         // window.location.reload();
       })
       .catch((error) => {
@@ -1030,11 +947,32 @@ export default class Gantt_component extends LightningElement {
   }
 
   hideModalBox(event) {
-    console.log('event in parent ', event.detail.message);
+    console.log("event in parent ", event.detail.message);
     this.showExportPopup = event.detail.message;
+  }
+
+  hideModalBox1(event) {
+    console.log("event in parent ", event.detail.message);
+    this.showImportPopup = false;
   }
 
   exportData() {
     this.showExportPopup = true;
+  }
+
+  importtData() {
+    this.showImportPopup = true;
+  }
+
+  handleShowSpinner() {
+    // Set isLoading to true to show the spinner
+    // this.isLoading = true;
+    //this.spinnerDataTable = true;
+  }
+
+  handleHideSpinner() {
+    // Set isLoading to true to show the spinner
+    // this.isLoading = false;
+    //this.spinnerDataTable = false;
   }
 }
