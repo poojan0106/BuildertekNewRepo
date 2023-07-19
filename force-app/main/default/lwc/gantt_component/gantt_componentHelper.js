@@ -18,7 +18,7 @@ function formatApexDatatoJSData(scheduleData, scheduleItemsData, scheduleItemsDa
     console.log('taskListForPhase :- ' + JSON.parse(JSON.stringify(taskListForPhase)));
     firstRowDup["id"] = scheduleData.Id;
     firstRowDup["name"] = scheduleData.Name
-    firstRowDup["startDate"] = ""
+    firstRowDup["startDate"] = scheduleData.startDate
     firstRowDup["expanded"] = true
     firstRowDup["type"] = 'Project'
     firstRowDup['customtype'] = 'Project'

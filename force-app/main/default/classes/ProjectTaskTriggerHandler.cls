@@ -7,6 +7,7 @@
 public class ProjectTaskTriggerHandler{
 	public static Boolean isFirstTime = true;
 	public static Boolean isTask = true;
+	public static Boolean newSchedule = false;
 	//Boolean variable to allow skipping execution of trigger in certain scenarios
 	public static Boolean blnSkipTaskTrigger = false;
 	public static Boolean updateFromGanttChart = false;
@@ -405,8 +406,8 @@ public class ProjectTaskTriggerHandler{
 	}
 
 	public void OnAfterUpdateOriginalstartandEndDates(Project_Task__c[] oldProjectTasks, Project_Task__c[] updatedProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap, Map<Id, Project_Task__c> oldProjectTaskMap){
-		
-		
+
+
 		System.debug('3rd method data in new list ==> ' + updatedProjectTasks);
 		// List<Project_Task__C> testSIList = new List<Project_Task__C>();
 		// testSIList = [Select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c
@@ -426,11 +427,11 @@ public class ProjectTaskTriggerHandler{
 			database.executeBatch(new ScheduleItemBatchClass(ProjectTaskIds));
 		}
 		System.debug('3rd method data at end of method new list ==> ' + updatedProjectTasks);
-	
+
 	}
 
 	public void OnAfterUpdate(Project_Task__c[] oldProjectTasks, Project_Task__c[] updatedProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap, Map<Id, Project_Task__c> oldProjectTaskMap){
-		
+
 
 		// this variable is used in processrecord method for get old map
 		oldMapValue = oldProjectTaskMap;
@@ -639,13 +640,13 @@ public class ProjectTaskTriggerHandler{
 		 Database.executeBatch(taskBatch, 1000);*/
 		// ProjectTaskBatch taskBatch = new ProjectTaskBatch(scheduleIds);
 		// Database.executeBatch(taskBatch, 1000);
-		
+
 	}
 
 	//@future
 	public static void processRecords(Set<Id> scheduleIds, Id schId, Set<Id> TaskIds, Boolean isFromImportTask, String isAfterInsert){
 		system.debug(isFromImportTask);
-		
+
 		List<buildertek__Project_Task__c> previuosTasks = [Select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c
 		                                                   FROM buildertek__Project_Task__c
 		                                                   WHERE buildertek__Schedule__c = :schId AND Id NOT IN:TaskIds AND buildertek__Milestone__c = :false
@@ -1082,7 +1083,7 @@ public class ProjectTaskTriggerHandler{
 		// UpdateScheduleItemdatesbatchhelper.batchjobexcute(mapAllTask.keySet());
 
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
-		
+
 	}
 
 	public void insertUpdateMilestones(Project_Task__c[] ProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap){
@@ -1179,12 +1180,14 @@ public class ProjectTaskTriggerHandler{
 
 		if (insertUpdateMilestoneMap.values().size() > 0){
 			ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+			ProjectTaskTriggerHandler.newSchedule = false;
 			upsert insertUpdateMilestoneMap.values();
 			ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
 		}
-
+		
 		if (deletemilestoneMap.values().size() > 0){
 			ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+			ProjectTaskTriggerHandler.newSchedule = false;
 			delete deletemilestoneMap.values();
 			ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
 		}

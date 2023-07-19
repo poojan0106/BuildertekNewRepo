@@ -39,19 +39,6 @@ trigger ProjectTaskTrigger on buildertek__Project_Task__c(after insert, after up
                     // this method setting the start date for phase but since the Predeseccor is not inserted with DML transaction that is why this method is commented
                     handler.insertUpdateMilestones(Trigger.new, Trigger.newMap);
                 }
-
-
-                /*  handler.OnAfterInsertItemCount(Trigger.new, Trigger.old);
-
-                 handler.OnAfterInsert(Trigger.new, Trigger.newMap);
-                 handler.UpdateOriginalstartandEndDates(Trigger.new, Trigger.newMap);
-                 if (ProjectTaskTriggerHandler.isTask == true){
-                 handler.OnAfterInsertItemCount(Trigger.new, Trigger.old);
-                 handler.OnBeforeInsert1(Trigger.new);
-                 ProjectTaskTriggerHandler.isTask = false;
-                 }*/
-
-
             }
         } else if (Trigger.isUpdate){
             // if (ProjectTaskTriggerHandler.blnSkipTaskTrigger){
@@ -75,6 +62,11 @@ trigger ProjectTaskTrigger on buildertek__Project_Task__c(after insert, after up
             handler.OnAfterDelete(Trigger.old);
         } else if (Trigger.isUnDelete && Trigger.isAfter){
             handler.OnAfterInsertItemCount(Trigger.new, Trigger.old);
+        }
+    }else if (ProjectTaskTriggerHandler.newSchedule) {
+        ProjectTaskTriggerHandler handler = new ProjectTaskTriggerHandler(Trigger.isExecuting, Trigger.size, Trigger.oldMap);
+        if (Trigger.isAfter && (Trigger.isInsert || Trigger.isUpdate) ){
+            handler.insertUpdateMilestones(Trigger.new, Trigger.newMap);
         }
     }
 }

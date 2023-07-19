@@ -1,4 +1,4 @@
-public without sharing class filePreviewController {
+public class previewFileController {
     
     @AuraEnabled
     public static Map<Id, list<ContentVersion>> getRelatedFiles(List<Id> lstParentIds) {
@@ -50,6 +50,7 @@ public without sharing class filePreviewController {
                 
             }
         }
+        
         return mapParentIdAndFiles;
     } 
 }

@@ -8,6 +8,31 @@ public with sharing class PreviewChangeOrderController {
             
         return temrec;
     }
+
+    @AuraEnabled
+    public static List<Contact> getObjectContact(String recordId){
+        List<Contact> con;
+        buildertek__Change_Order__c  corecs;
+        Set<Id> projectAccId= new Set<Id>();
+        
+        corecs = [SELECT Id, Name, buildertek__Project__c , buildertek__Project__r.buildertek__Customer__c FROM buildertek__Change_Order__c WHERE Id = :recordId];
+
+        System.debug('corecs.buildertek__Project__c' + corecs.buildertek__Project__c);
+        System.debug('corecs.buildertek__Project__c' + corecs.buildertek__Project__r.buildertek__Customer__c);
+
+        if (corecs.buildertek__Project__c != null && corecs.buildertek__Project__r.buildertek__Customer__c != null){
+            if(corecs.buildertek__Project__r.buildertek__Customer__c != null){
+                projectAccId.add(corecs.buildertek__Project__r.buildertek__Customer__c);
+            }
+            
+        }
+
+        System.debug('projectAccId' + projectAccId);
+        if(!projectAccId.isEmpty()){
+            con = [SELECT Id, Name, Email , buildertek__Primary_Contact__c, AccountId FROM Contact WHERE AccountId IN: projectAccId];
+        }
+        return con;
+    }
     
     @AuraEnabled
     public static string getChangeOrderLines(String recordId, String templateId){

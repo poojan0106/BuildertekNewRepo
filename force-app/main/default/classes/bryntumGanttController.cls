@@ -597,10 +597,12 @@ public with sharing class bryntumGanttController {
         System.debug('user: ' + user);
         System.debug('masterId: ' + masterId);
 
-        if(initialStartDate == null){
+        if(initialStartDate == null ){
             initialStartDate = Date.Today();
+            System.debug('initialStartDate: ' + initialStartDate);
         }
-
+        System.debug('initialStartDate: outif' + initialStartDate);
+        System.debug('date.parse(initialStartDate.format()):- '+date.parse(initialStartDate.format()));
         buildertek__Schedule__c schedule = new buildertek__Schedule__c(
             buildertek__Description__c = description,
             buildertek__Initial_Start_Date__c = date.parse(initialStartDate.format()),
@@ -799,5 +801,4 @@ public with sharing class bryntumGanttController {
         System.debug('Final endDate: ' + endDate);
         return endDate;
 	}
-
 }
