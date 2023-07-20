@@ -164,7 +164,6 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
                         }
                     };
                     let encodedDef = btoa(JSON.stringify(cmpDef));
-
                     this[NavigationMixin.Navigate]({
                         type: "standard__webPage",
                         attributes: {
@@ -181,6 +180,7 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
             console.log('error', JSON.stringify(error));
         }
     }
+
     onSaveandNew() {
         try {
             this.isLoading = true;
@@ -204,6 +204,7 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
             console.log('error', JSON.stringify(error));
         }
     }
+
     disconnectedCallback() {
         document.removeEventListener('click', this.handleDocumentEvent.bind(this));
     }

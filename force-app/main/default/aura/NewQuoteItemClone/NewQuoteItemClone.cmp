@@ -224,25 +224,25 @@
 
 
 
-        <div class="slds-modal__header" style="font-size:17px; display:none;">
-            <!-- <aura:if isTrue="{!v.isproject}">
+        <div class="slds-modal__header" style="font-size:17px; display:block; text-align:left;">
+            <aura:if isTrue="{!v.isproject}">
                 <a href="{!'/'+v.quoteId}" onclick="{!c.closetab}">{!v.quoteName}</a>
-                <span style="float:right; font-size: small;">
+                <!-- <span style="float:right; font-size: small;">
                     <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{!c.closetab}"
                         iconPosition="right" />
-                </span>
+                </span> -->
 
-            </aura:if> -->
+            </aura:if>
         </div>
 
         <div style="margin: -8px 0px;">
             <div style="display:block">
                 <aura:if isTrue="{!v.isproject}">
-                    <a href="{!'/'+v.quoteId}" onclick="{!c.closetab}">{!v.quoteName}</a>
-                    <span style="float:right; font-size: small;">
+                    <!-- <a href="{!'/'+v.quoteId}" onclick="{!c.closetab}">{!v.quoteName}</a> -->
+                    <!-- <span style="float:right; font-size: small;">
                         <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{!c.closetab}"
                             iconPosition="right" />
-                    </span>
+                    </span> -->
                 </aura:if>
                 <aura:if isTrue="{!!v.displayGrouping}">
                     <div id='collapseBtn' class="slds-float_left" style="margin-top: 5px;">
@@ -371,7 +371,13 @@
                                     <lightning:button label="Delete" onclick="{!c.deleteSelectedQuoteItem}"
                                         class="sldsButtonGroup" />
                                 </div>
-
+                                <aura:if isTrue="{!v.isproject}">
+                                    <!-- <a href="{!'/'+v.quoteId}" onclick="{!c.closetab}">{!v.quoteName}</a> -->
+                                    <span style="float:right; font-size: small;padding-left: 4px;">
+                                        <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{!c.closetab}"
+                                            iconPosition="right" />
+                                    </span>
+                                </aura:if>
                             </aura:set>
                         </aura:if>
                     </lightning:buttonGroup>

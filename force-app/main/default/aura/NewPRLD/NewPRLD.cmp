@@ -79,14 +79,14 @@
 
 
 
-    <div class=" " style="display: flex;justify-content: center;">
-        <div class="slds slds-scope rkclass1">
+    <div style="display: flex;justify-content: center;">
+        <div class="slds rkclass1">
             <header class="slds-modal__header">
                 <lightning:buttonIcon iconName="utility:close" alternativeText="close12"  variant="bare-inverse" class="slds-modal__close" />
                 <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Pricing Request Line Detail</h2>
             </header>
             <div class="slds-modal__content" id="modal-content-id-1" style="height:100%">
-                <div class="">
+                <div>
                     <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Pricing_Request_Line_Details__c"  onsubmit="{!c.handleSubmit}" density="Comfy">
                         <lightning:messages />
                         <div class="rkclass">
@@ -117,7 +117,7 @@
                                 
                             </lightning:layout>
                         </div>
-                        <div class="">    
+                        <div>    
                             <div class="modal-footer slds-modal__footer slds-size_1-of-1" style="height:55px;">
                                 <div style="float:right !important;">
                                     <lightning:button label="Cancel" title="Cancel" onclick="{!c.closeModel}" class="myBtn"/>

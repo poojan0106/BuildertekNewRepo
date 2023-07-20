@@ -6,14 +6,14 @@
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 **/
 public without sharing class NewPRLDController {
-    public NewPRLDController() {
+    // public NewPRLDController() {
 
-    }
-    @AuraEnabled
-	public static String getobjectName(Id recordId){
-        String sObjName = recordId.getSObjectType().getDescribe().getName();  
-        return sObjName;
-    }
+    // }
+    // @AuraEnabled
+	// public static String getobjectName(Id recordId){
+    //     String sObjName = recordId.getSObjectType().getDescribe().getName();  
+    //     return sObjName;
+    // }
 	@AuraEnabled
 	public static String getFieldSet(){
 		String result = '';

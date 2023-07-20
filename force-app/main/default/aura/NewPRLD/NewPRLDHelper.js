@@ -70,11 +70,11 @@
                         tabId: focusedTabId
                     });
 
-                    var recordId = component.get("v.recordId");
+                    var recordId = component.get("v.parentRecordId");
                     //get record id of parent record from 
 
 
-                    if (recordId) {
+                    if (recordId != 'list' && recordId != null && recordId != 'home' && recordId.includes('0000')) {
                         var navEvt = $A.get("e.force:navigateToSObject");
                         navEvt.setParams({
                             "recordId": recordId,

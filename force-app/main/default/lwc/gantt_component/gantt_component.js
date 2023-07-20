@@ -6,6 +6,7 @@ import { loadScript, loadStyle } from "lightning/platformResourceLoader";
 import GanttStyle from "@salesforce/resourceUrl/BT_Bryntum_NewGanttCss";
 import GANTTModule from "@salesforce/resourceUrl/BT_Bryntum_NewGantt_ModuleJS";
 import { NavigationMixin } from "lightning/navigation";
+import { refreshApex } from "@salesforce/apex"
 
 // import GanttStyle from "@salesforce/resourceUrl/BT_Bryntum_NewGanttCss";
 import GanttToolbarMixin from "./lib/GanttToolbar";
@@ -649,9 +650,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 				{
 					type: "predecessor",
 					width: 120,
-					editor: {
-						multipleSelection: false,
-					},
+					editor: false,
 					renderer: (record) => {
 						populateIcons(record);
 						if (record.record._data.type == "Project") {
@@ -961,6 +960,21 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 			console.log("New task data: ", taskData);
 		});
 
+		gantt.on('link', function(event) {
+			const linkType = event.record.type; // 'StartToEnd' or 'EndToStart'
+			const sourceTask = event.sourceRecord;
+			const targetTask = event.targetRecord;
+			console.log('event fired ');
+
+			if (linkType === 'StartToEnd') {
+				// Allow link creation for predecessors (Start of one task to End of another)
+				// Perform the default action for linking tasks
+			} else if (linkType === 'EndToStart') {
+				// Disable link creation for successors (End of one task to Start of another)
+				event.preventDefault();
+			}
+		});
+
 		//Resources data
 		gantt.addListener("cellClick", (event) => {
 			if (event.column.data.text == "Internal Resource") {
@@ -1074,7 +1088,8 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 		})
 			.then(function (response) {
 				console.log("response ", { response });
-				that.connectedCallback();
+				// that.connectedCallback();
+        refreshApex(that.SchedulerId)
 				that.handleHideSpinner();
 				// that.getScheduleWrapperDataFromApex();
 				// window.location.reload();

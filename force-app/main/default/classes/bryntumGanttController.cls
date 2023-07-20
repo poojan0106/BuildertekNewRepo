@@ -612,7 +612,19 @@ public with sharing class bryntumGanttController {
         );
         insert schedule;
         String pageUrl = schedule.Id;
-
+        
+        buildertek__Project_Task__c newSchItem = new buildertek__Project_Task__c();
+        newSchItem.Name = 'New task';
+        newSchItem.buildertek__Schedule__c = schedule.Id;
+        newSchItem.buildertek__Duration__c = 1;
+        if (initialStartDate != null){
+            newSchItem.buildertek__Start__c = initialStartDate;
+        } else{
+            newSchItem.buildertek__Start__c = Date.today();
+        }
+        insert newSchItem;
+        System.debug('newSchItem: ' + newSchItem);
+        
         if(masterId != null || masterId != ''){
             createScheduleLineFromMasterSchedule(schedule.Id, masterId, initialStartDate);
         }
@@ -781,7 +793,7 @@ public with sharing class bryntumGanttController {
     // Skip weekend and calculate date
 	public static Date addDaysSkippingWeekends(String businessHourId, Date startDate, Integer duration){
         // Long range = (7) * 24 * 60 * 60 * 1000;
-        // Date finishDate = System.BusinessHours.add(businessHourId, startDate.addDays(duration), range).date();
+        // Date finishDate = System.BusinessHours.add(businessHourId, startDate.addDays(duration), range).date().addDays(-1);
         // System.debug('finishDate:'+ finishDate);
         // return finishDate;
 

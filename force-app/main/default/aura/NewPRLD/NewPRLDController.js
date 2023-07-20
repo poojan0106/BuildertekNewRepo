@@ -29,7 +29,7 @@
             }
             component.set("v.parentRecordId", parentRecordId);
         }
-        console.log('parentRecordId',parentRecordId);
+        console.log('parentRecordId',component.get("v.parentRecordId"));
         // if(parentRecordId != null && parentRecordId != ''){
         //         var action = component.get("c.getobjectName");
         //         action.setParams({

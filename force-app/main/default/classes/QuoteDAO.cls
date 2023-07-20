@@ -2510,7 +2510,7 @@ public with sharing class QuoteDAO{
             }      
         }
 
-        sQuery = 'select id, Name from ' + ObjectName + ' where Name LIKE: searchKey AND ' + filter + ' order by Name ASC limit 5';
+        sQuery = 'select id, Name from ' + ObjectName + ' where Name LIKE: searchKey AND ' + filter + ' order by Name ASC';
         List<sObject> lstOfRecords = Database.query(sQuery);
         for (sObject obj : lstOfRecords){
             returnList.add(obj);
