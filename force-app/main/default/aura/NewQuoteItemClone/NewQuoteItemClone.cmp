@@ -223,17 +223,15 @@
     <div style="background: white;border-radius: 5px;height: 100%;" class="slds">
 
 
-
+    <aura:if isTrue="{!v.isproject}">
         <div class="slds-modal__header" style="font-size:17px; display:block; text-align:left;">
-            <aura:if isTrue="{!v.isproject}">
-                <a href="{!'/'+v.quoteId}" onclick="{!c.closetab}">{!v.quoteName}</a>
+            <a href="{!'/'+v.quoteId}" onclick="{!c.closetab}">{!v.quoteName}</a>
                 <!-- <span style="float:right; font-size: small;">
                     <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{!c.closetab}"
                         iconPosition="right" />
                 </span> -->
-
-            </aura:if>
-        </div>
+            </div>
+    </aura:if>
 
         <div style="margin: -8px 0px;">
             <div style="display:block">

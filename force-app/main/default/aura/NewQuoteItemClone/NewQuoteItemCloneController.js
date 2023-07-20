@@ -2399,8 +2399,9 @@ console.log(document.getElementsByClassName(className)[0]);
         console.log(component.get("v.TotalRecords").groups);
         var quoteId = component.get("v.quoteId");
         var spanEle = event.currentTarget.dataset.iconname;
-        console.log(spanEle)
+        console.log("spanEle:::", spanEle);
         var expandallicon = document.getElementsByClassName('expandAllBtn_' + quoteId);
+        console.log("expandall::::", expandallicon);
         var collapeallIcon = document.getElementsByClassName('CollapeseAllBtn_' + quoteId);
         var labelName = spanEle
         if (labelName == 'Expand All') {
