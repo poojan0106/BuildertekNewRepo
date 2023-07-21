@@ -377,7 +377,9 @@ export default (base) =>
       if (gantt.selectedRecord) {
         gantt.editTask(gantt.selectedRecord);
       } else {
-        bryntum.gantt.Toast.show("First select the task you want to edit");
+        var message = "First select the task you want to edit";
+        this.gantt.callGanttComponent.showToastMessage(message);
+        // bryntum.gantt.Toast.show("First select the task you want to edit");
       }
     }
 

@@ -142,6 +142,7 @@
 
         });
         $A.enqueueAction(btadminaction);
+        helper.applyCSSBasedOnURL(component);
 
     },
 

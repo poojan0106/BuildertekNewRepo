@@ -937,7 +937,7 @@
 
                         <!-- <div class="slds mainTablediv"> -->
                         <div class="slds-scrollable">
-                            <div class="divcont">
+                            <div class="divcont" aura:id="headerDiv">
                                 <!--<div class="slds-scrollable" style="width:100%;height: 35rem;">-->
 
                                 <table
@@ -1410,7 +1410,7 @@
                             </div>
                             <!--<br />-->
                             <aura:if isTrue="{!v.total > 50}">
-                                <div class="slds-align_absolute-center">
+                                <div class="slds-align_absolute-center" style="background-color: white;">
                                     <lightning:button disabled="{!v.page == 1}" variant="brand" label="Previous"
                                         onclick="{! c.navigate }" />
                                     <lightning:button disabled="{!v.page == v.pages}" aura:id="previousPage"

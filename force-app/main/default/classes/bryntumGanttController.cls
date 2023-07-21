@@ -106,7 +106,7 @@ public with sharing class bryntumGanttController {
 
         String strQuery = 'SELECT ';
 
-        strQuery += 'Id,Name,buildertek__Type__c,buildertek__Indent_Task__c,buildertek__Reference_for_Import__c,buildertek__Lag__c,buildertek__Schedule__c,buildertek__Budget__c,buildertek__Add_To_All_Active_Schedules__c,buildertek__Notes__c,buildertek__Schedule__r.Name,buildertek__Start__c,buildertek__Finish__c,buildertek__Duration__c,buildertek__Contractor__c,buildertek__Contractor__r.Name,buildertek__Phase__c,buildertek__Completion__c, buildertek__Dependency__c,buildertek__Dependency__r.Name,buildertek__Contractor_Resource__c,buildertek__Contractor_Resource__r.Name,buildertek__Resource__c, buildertek__Resource__r.Name,buildertek__Milestone__c,buildertek__Order__c,buildertek__Budget_Line__c,CreatedDate FROM buildertek__Project_Task__c where buildertek__Schedule__c = :  scheduleid Order By buildertek__Order__c NULLS LAST,CreatedDate';
+        strQuery += 'Id,Name,buildertek__Type__c,buildertek__Indent_Task__c,buildertek__Reference_for_Import__c,buildertek__Lag__c,buildertek__Schedule__c,buildertek__Budget__c,buildertek__Add_To_All_Active_Schedules__c,buildertek__Notes__c,buildertek__Schedule__r.Name,buildertek__Schedule__r.buildertek__Description__c,buildertek__Start__c,buildertek__Finish__c,buildertek__Duration__c,buildertek__Contractor__c,buildertek__Contractor__r.Name,buildertek__Phase__c,buildertek__Completion__c, buildertek__Dependency__c,buildertek__Dependency__r.Name,buildertek__Contractor_Resource__c,buildertek__Contractor_Resource__r.Name,buildertek__Resource__c, buildertek__Resource__r.Name,buildertek__Milestone__c,buildertek__Order__c,buildertek__Budget_Line__c,CreatedDate FROM buildertek__Project_Task__c where buildertek__Schedule__c = :  scheduleid Order By buildertek__Order__c NULLS LAST,CreatedDate';
         //CreatedDate//Order by buildertek__Milestone__c , Order__c ASC NULLS LAST, Auto_Number__c ASC
         system.debug('strQuery---' + strQuery);
 
@@ -115,7 +115,7 @@ public with sharing class bryntumGanttController {
         System.debug('dataTableDtls**=='+JSON.serialize(dataTableDtls.lstOfSObjs));
         List<buildertek__Project_Task__c> projectTasksSorted = dataTableDtls.lstOfSObjs;
 
-        String milestonequery = 'Select buildertek__Project__r.Name,buildertek__Schedule__r.Name, buildertek__Dependency__r.buildertek__Finish__c,buildertek__Contractor_Resource__r.Name,buildertek__Contractor__r.Name,buildertek__Resource__r.Name, ' + new_BT_Utils.getQueryStringForObjectWithAllFields('buildertek__Project_Task__c');
+        String milestonequery = 'Select buildertek__Project__r.Name,buildertek__Schedule__r.Name,buildertek__Schedule__r.buildertek__Description__c, buildertek__Dependency__r.buildertek__Finish__c,buildertek__Contractor_Resource__r.Name,buildertek__Contractor__r.Name,buildertek__Resource__r.Name, ' + new_BT_Utils.getQueryStringForObjectWithAllFields('buildertek__Project_Task__c');
         milestonequery = milestonequery + ' From buildertek__Project_Task__c where buildertek__Schedule__c =:scheduleid AND buildertek__Milestone__c= true';
         List<buildertek__Project_Task__c> milestoneTaskList = DataBase.query(milestonequery);
 
@@ -197,7 +197,7 @@ public with sharing class bryntumGanttController {
 
         system.debug('Schedule Items ::' + dataTableDtls.lstOfSObjs);
         system.debug('Schedule Item ::' + dataTableDtls);
-        buildertek__Schedule__c schedulerec = [Select Id, Name, buildertek__Gantt_Draw_Dependencies__c, buildertek__Gantt_Highlight_Non_Working_Time__c, buildertek__Gantt_Project_Lines__c, buildertek__Gantt_Task_Labels__c, buildertek__Hide_Gantt_Schedule__c, buildertek__Project__c, buildertek__Project__r.Name
+        buildertek__Schedule__c schedulerec = [Select Id, Name, buildertek__Description__c, buildertek__Gantt_Draw_Dependencies__c, buildertek__Gantt_Highlight_Non_Working_Time__c, buildertek__Gantt_Project_Lines__c, buildertek__Gantt_Task_Labels__c, buildertek__Hide_Gantt_Schedule__c, buildertek__Project__c, buildertek__Project__r.Name
                                             from buildertek__Schedule__c
                                             Where Id = :scheduleid];
         dataTableDtls.scheduleObj = schedulerec;
@@ -612,7 +612,7 @@ public with sharing class bryntumGanttController {
         );
         insert schedule;
         String pageUrl = schedule.Id;
-        
+
         buildertek__Project_Task__c newSchItem = new buildertek__Project_Task__c();
         newSchItem.Name = 'New task';
         newSchItem.buildertek__Schedule__c = schedule.Id;
@@ -624,7 +624,7 @@ public with sharing class bryntumGanttController {
         }
         insert newSchItem;
         System.debug('newSchItem: ' + newSchItem);
-        
+
         if(masterId != null || masterId != ''){
             createScheduleLineFromMasterSchedule(schedule.Id, masterId, initialStartDate);
         }

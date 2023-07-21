@@ -23,8 +23,8 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
     @track scheduleLineItems = [];
     @track initialStartDate;
     @track isLoading = false;
-    description = '';
-    type = 'Standard';
+    @track description = '';
+    @track type = 'Standard';
 
     connectedCallback(event) {
         document.addEventListener('click', this.handleDocumentEvent.bind(this));
@@ -203,6 +203,13 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
         } catch (error) {
             console.log('error', JSON.stringify(error));
         }
+    }
+
+    onCancelHandle() {
+        console.log('Clear All Value');
+        this.searchProjectName = '';
+        this.searchProjectManager = '';
+        this.searchbarValue = '';
     }
 
     disconnectedCallback() {

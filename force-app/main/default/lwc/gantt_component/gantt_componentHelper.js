@@ -15,9 +15,9 @@ function formatApexDatatoJSData(scheduleData, scheduleItemsData, scheduleItemsDa
 
     var taskListForPhase = scheduleItemsDataList;
     var firstRowDup = {};
-    console.log('taskListForPhase :- ' + JSON.parse(JSON.stringify(taskListForPhase)));
+    console.log('taskListForPhase :- ' , JSON.parse(JSON.stringify(taskListForPhase)));
     firstRowDup["id"] = scheduleData.Id;
-    firstRowDup["name"] = scheduleData.Name
+    firstRowDup["name"] = scheduleData.buildertek__Description__c;
     firstRowDup["startDate"] = scheduleData.startDate
     firstRowDup["expanded"] = true
     firstRowDup["type"] = 'Project'
@@ -534,14 +534,14 @@ function convertJSONtoApexData(data, taskData, dependenciesData, resourceData) {
                     endDate = new Date(rowData[i].endDate);
                     //endDate.setDate(endDate.getDate() + 1)
                 }
-                
+
                 rowData[i].endDate = endDate;
                 if (rowData[i]['id'].indexOf('_generate') == -1) {
                     updateData['Id'] = rowData[i]['id']
                 }
                 updateData['buildertek__Schedule__c'] = taskData[0].id;
                 updateData['Name'] = rowData[i]['name'];
-                
+
                 updateData['buildertek__Order__c'] = i + 1;
                 //var startdate = new Date(rowData[i]['startDate'])
                 // console.log('test',new Date(rowData[i]['endDate']).toLocaleDateString())
@@ -565,7 +565,7 @@ function convertJSONtoApexData(data, taskData, dependenciesData, resourceData) {
                         updateData['buildertek__Type__c'] = 'Task'
                     }
                 }
-                
+
                 if (rowData[i]['cls']) {
                     var check = rowData[i]['cls']
                     if (check.includes('milestoneCompleteColor')) {
@@ -584,8 +584,8 @@ function convertJSONtoApexData(data, taskData, dependenciesData, resourceData) {
                         updateData['buildertek__Phase__c'] = rowData[i]['parentId'].split('_')[1]
                     }
                 }
-                
-                
+
+
                 var filledDependency = false
                 for (var j = 0; j < dependenciesData.length; j++) {
                     if (dependenciesData[j]['to'] == rowData[i]['id']) {
