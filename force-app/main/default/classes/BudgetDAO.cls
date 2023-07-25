@@ -3059,6 +3059,72 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         update purchaseOrders;
     }
 
+    // ************ For Add Sales Invoice Button *************
+
+    @AuraEnabled
+    public static list<buildertek__Billings__c> getSalesInvoice(String budgetId){
+        try {
+            String ProjectId = [SELECT Id, Name, buildertek__Project__c FROM  buildertek__Budget__c WHERE Id =: budgetId].buildertek__Project__c;
+            list<buildertek__Billings__c> salesInvoiceList = [SELECT Id, Name, buildertek__Budget__r.Name, buildertek__Project__r.Name, buildertek__Project__c, buildertek__Terms__c, buildertek__Amount__c, buildertek__Total_Amount_Tax__c  FROM buildertek__Billings__c WHERE buildertek__Project__c =: ProjectId AND buildertek__Budget__c = null];
+            return salesInvoiceList;
+        } catch (Exception e) {
+            System.debug('error in getSalesInvoice => ' + e.getMessage() + ' at line no : '+ e.getLineNumber() );
+            return null;
+        }
+    }
+
+    @AuraEnabled
+    public static string CreateNewBudgetLine(list<String> SLIDlist, String BudgetId){
+        // try {
+            buildertek__Budget_Line_Group__c BLGroup = [SELECT Id, Name FROM buildertek__Budget_Line_Group__c WHERE Name LIKE '%Sales Invoice%' LIMIT 1];
+        if(BLGroup != null){
+                list<buildertek__Budget_Item__c> budgetLineToInset = new list<buildertek__Budget_Item__c>();
+                list<buildertek__Billings__c> SalesInvoices = [SELECT Id, Name,buildertek__Total_Amount_Tax__c  FROM buildertek__Billings__c WHERE Id IN : SLIDlist];
+                for(buildertek__Billings__c Sl : SalesInvoices){
+                    buildertek__Budget_Item__c BL = new buildertek__Budget_Item__c();
+                    BL.Name = sl.Name + ' budget line';
+                    BL.buildertek__Unit_Price__c = sl.buildertek__Total_Amount_Tax__c;
+                    BL.buildertek__Quantity__c = 1;
+                    BL.buildertek__Group__c = BLGroup.Id;
+                    budgetLineToInset.add(BL);
+                }
+                if(budgetLineToInset.size() > 0){
+                    // insert budgetLineToInset;
+                    System.debug('budgetLineToInset => ' + budgetLineToInset);
+                }
+            }
+            else{
+                System.debug('Create Budgt Line Group');
+
+            }
+            return 'success';
+            
+        // } catch (Exception e) {
+        //     System.debug('error in UpdateSalesInvoice => ' + e.getMessage() + ' at line no : '+ e.getLineNumber() );
+        //     return e.getMessage();
+        // }
+    }
+
+    @AuraEnabled
+    public static string UpdateSalesInvoices(list<String> SLIDlist, String BudgetId){
+        try {
+            list<buildertek__Billings__c> slToUpdate = new list<buildertek__Billings__c>();
+            if(SLIDlist.size() > 0){
+                list<buildertek__Billings__c> slIDs = [SELECT Id, Name FROM buildertek__Billings__c WHERE Id IN : SLIDlist];
+                for(buildertek__Billings__c sl : slIDs){
+                    sl.buildertek__Budget__c = BudgetId;
+                    slToUpdate.add(sl);
+                }
+                    update slToUpdate;
+                return 'Sucesss';
+            }
+            return null;
+        } catch (Exception e) {
+            System.debug('error in UpdateSalesInvoice => ' + e.getMessage() + ' at line no : '+ e.getLineNumber() );
+            return null;
+        }
+    }
+
 
 
 

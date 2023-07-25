@@ -37,7 +37,7 @@ trigger ProjectTaskTrigger on buildertek__Project_Task__c(after insert, after up
 
                     //insert update milestones
                     // this method setting the start date for phase but since the Predeseccor is not inserted with DML transaction that is why this method is commented
-                    handler.insertUpdateMilestones(Trigger.new, Trigger.newMap);
+                    // handler.insertUpdateMilestones(Trigger.new, Trigger.newMap);
                 }
             }
         } else if (Trigger.isUpdate){
@@ -49,7 +49,7 @@ trigger ProjectTaskTrigger on buildertek__Project_Task__c(after insert, after up
                 // handler.updateChildDatesWithPredecessor(Trigger.new, Trigger.newMap);
                 handler.OnAfterUpdate(Trigger.old, Trigger.new, Trigger.newMap, Trigger.oldMap);
                 handler.OnAfterUpdateOriginalstartandEndDates(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);
-                handler.insertUpdateMilestones(Trigger.new, Trigger.newMap);
+                // handler.insertUpdateMilestones(Trigger.new, Trigger.newMap);
                 System.debug('at the end of IS update trigger');
             }
             if (Trigger.isBefore){

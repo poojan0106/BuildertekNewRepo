@@ -292,6 +292,7 @@ export default class importScheduleLine extends LightningElement {
         })
             .then((response) => {
                 const state = response;
+                console.log('State Response:',state);
                 console.log({ state });
                 if (state === "SUCCESS") {
                     if (response === "SUCCESS") {
@@ -312,7 +313,7 @@ export default class importScheduleLine extends LightningElement {
                             mode: "dismissible",
                         });
                         this.dispatchEvent(toastEvent);
-
+                        document.location.reload(true)
                         // if (this.isNewGantt) {
                         //     const workspaceAPI = this.template.querySelector(
                         //         "lightning-navigation"
@@ -391,7 +392,7 @@ export default class importScheduleLine extends LightningElement {
                     });
                     this.dispatchEvent(evt);
                     this.Spinner = false;
-                    console.error(response.getError());
+                    // console.error('response:',response);
                 }
             })
             .catch((error) => {

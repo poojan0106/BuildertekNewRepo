@@ -29,6 +29,9 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   @track scheduleItemsDataList;
   @track scheduleData;
   @track scheduleItemsData;
+
+  @track error_toast = true;
+
   @api SchedulerId;
   @api isLoading = false;
   @api showExportPopup;
@@ -352,6 +355,13 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
           "error message to get while getting data from apex:- ",
           error.message
         );
+        this.dispatchEvent(
+          new ShowToastEvent({
+            title: "Error",
+            message: "Something went Wrong",
+            variant: "error",
+          })
+          );
       });
   }
 
@@ -615,11 +625,11 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       columns: [
         {
           type: "wbs",
-          draggable : false,
+          draggable: false,
         },
         {
           type: "name",
-          draggable : false,
+          draggable: false,
           width: 250,
           renderer: (record) => {
             populateIcons(record);
@@ -646,49 +656,49 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
           },
         },
         {
-			type: "predecessor",
-      draggable : false,
-			width: 120,
-			editor: false,
-			renderer: (record) => {
-			  populateIcons(record);
-			  if (record.record._data.type == "Project") {
-				return "";
-			  }
-			  if (record.record._data.type == "Phase") {
-				return "";
-			  }
-			  if (record.record._data.name == "Milestone Complete") {
-				return "";
-			  } else {
-				return record.record._data.predecessorName;
-			  }
-			},
-		    },
+          type: "predecessor",
+          draggable: false,
+          width: 120,
+          editor: false,
+          renderer: (record) => {
+            populateIcons(record);
+            if (record.record._data.type == "Project") {
+              return "";
+            }
+            if (record.record._data.type == "Phase") {
+              return "";
+            }
+            if (record.record._data.name == "Milestone Complete") {
+              return "";
+            } else {
+              return record.record._data.predecessorName;
+            }
+          },
+        },
         {
           type: "startdate",
-          draggable : false,
+          draggable: false,
           allowedUnits: "datetime",
         },
         {
           type: "enddate",
           allowedUnits: "datetime",
-          draggable : false,
+          draggable: false,
         },
         {
           type: "duration",
-          draggable : false,
+          draggable: false,
           allowedUnits: "day",
         },
         {
           type: "percentdone",
-          draggable : false,
+          draggable: false,
           showCircle: true,
           width: 70,
         },
         {
           text: "Internal Resource",
-          draggable : false,
+          draggable: false,
           width: 120,
           editor: false,
           renderer: function (record) {
@@ -729,7 +739,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         //Added for Contractor
         {
           text: "Contractor",
-          draggable : false,
+          draggable: false,
           width: 120,
           editor: false,
           renderer: function (record) {
@@ -770,7 +780,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         },
         {
           text: "Contractor Resource",
-          draggable : false,
+          draggable: false,
           width: 110,
           editor: false,
           renderer: function (record) {
@@ -822,7 +832,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         // },
         {
           type: "action",
-          draggable : false,
+          draggable: false,
           // text    : 'Attach File',
           width: 30,
           actions: [
@@ -854,7 +864,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         },
         {
           type: "action",
-          draggable : false,
+          draggable: false,
           // text    : 'Files',
           width: 30,
           actions: [
@@ -884,15 +894,17 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         },
         {
           type: "action",
-          draggable : false,
+          draggable: false,
           //text    : 'Go to Item',
           width: 30,
           actions: [
             {
               cls: "b-fa b-fa-external-link-alt",
               onClick: ({ record }) => {
-                if (record._data.id.indexOf("_generate") == -1 &&
-                record._data.name != "Milestone Complete") {
+                if (
+                  record._data.id.indexOf("_generate") == -1 &&
+                  record._data.name != "Milestone Complete"
+                ) {
                   console.log("Action link", record._data.id);
                   this.navigateToRecordViewPage(record._data.id);
                 }
@@ -911,9 +923,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
             },
           ],
         },
-        
       ],
-
 
       subGridConfigs: {
         locked: {
@@ -973,39 +983,44 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
             advancedTab: false,
           },
         },
-        taskMenu : {
-          disabled: (record) => {
-            console.log("record.record._data.type taskmenu:- ",record.record._data.type);
-            console.log("condition taskmenu:- ",(record.record._data.type == 'Phase' || record.record._data.type == 'Project'));
-            if(record.record._data.type == 'Phase' || record.record._data.type == 'Project'){
-              return false
-            }else{
-              return false
-            }
-          },
-          items : {
+        taskMenu: {
+          items: {
             // Hide delete task option
             // deleteTask: false,
-          indent : false,
-          outdent : false,
-          convertToMilestone : false,
-          linkTasks : false,
-          unlinkTasks : false,
+            indent: false,
+            outdent: false,
+            convertToMilestone: false,
+            linkTasks: false,
+            unlinkTasks: false,
 
             // Hide item from the `add` submenu
             add: {
-                menu: {
-                     subtask: false,
-                  successor:false,                     predecessor:false,
-                  milestone:false,
-
-                }
-            }
-        }
+              menu: {
+                subtask: false,
+                successor: false,
+                predecessor: false,
+                milestone: false,
+              },
+            },
+          },
         },
-        cellEdit : {
-          editNextOnEnterPress : false,
-          addNewAtEnd : false
+        cellEdit: {
+          editNextOnEnterPress: false,
+          addNewAtEnd: false,
+        },
+      },
+
+      listeners: {
+        taskMenuBeforeShow({ record }) {
+          // put your location here where you want to disable the task menu
+          if (
+            record._data.type == "Phase" ||
+            record._data.type == "Project" ||
+			record._data.customtype == "Milestone"
+          ) {
+            // return false to prevent showing the task menu
+            return false;
+          }
         },
       },
     });
@@ -1144,13 +1159,17 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     });
   }
 
-
   //* calling toast message method
   showToastMessage(message) {
-    console.log('show toast message method')
-    bryntum.gantt.Toast.show(message);
+    console.log("show toast message method");
+    this.dispatchEvent(
+      new ShowToastEvent({
+        title: "Warning",
+        message: message,
+        variant: "warning",
+      })
+    );
   }
-
 
   //* calling this method on save changes
   saveChanges(scheduleData, taskData) {
@@ -1159,6 +1178,40 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       this.scheduleItemsDataList,
       taskData
     ); //!helper method to get list of string to delete
+
+    console.log('taskdata:- ',taskData);
+    var mapofphase = {};
+    var listofmilestone = [];
+    taskData.forEach(newTaskRecord => {
+      // console.log('newTaskRecord in recordtobedeleted :- ',newTaskRecord);
+      // if(newTaskRecord.Id == "DemoGenretedId"){
+      //     delete newTaskRecord.Id;
+      // }
+      
+      //
+      // if(mapofphase.has(newTaskRecord.buildertek__Phase__c)){
+      //   mapofphase[newTaskRecord.buildertek__Phase__c] = mapofphase.get(newTaskRecord.buildertek__Phase__c) + 1;
+      // } else {
+      //   mapofphase.put(newTaskRecord.buildertek__Phase__c , 1);
+      // }
+
+      console.log('infor loop newTaskrecord');
+      var demoidvar = newTaskRecord.Id
+      console.log('demoidvar:- ',demoidvar);
+      if(demoidvar != undefined || demoidvar != null){
+        if(demoidvar.includes("DemoGenretedId")){
+          console.log('newTaskRecord:- ',newTaskRecord);
+          const index = taskData.indexOf(newTaskRecord);
+          taskData.splice(index, 1);
+          console.log('taskData:- ',taskData);
+          delete newTaskRecord.Id
+          taskData.push(newTaskRecord);
+          console.log('newTaskRecord2:- ',newTaskRecord);
+        }
+      }
+      });
+
+
     var that = this;
     upsertDataOnSaveChanges({
       scheduleRecordStr: JSON.stringify(scheduleData),
@@ -1167,11 +1220,31 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     })
       .then(function (response) {
         console.log("response ", { response });
-        that.handleHideSpinner();
+        console.log("response ", response);
+        debugger
+        if(response == "Success"){
+          that.dispatchEvent(
+            new ShowToastEvent({
+              title: "Success",
+              message: "Save changes Successfully",
+              variant: "success",
+            })
+          );
+          let intervalID = setInterval(() => {
+            window.location.reload();
+          }, 1000);
+        } else{
+          that.dispatchEvent(
+            new ShowToastEvent({
+              title: "Error",
+              message: "Something Went Wrong",
+              variant: "error",
+            })
+            );
+            that.handleHideSpinner();
+        }
         // that.connectedCallback();
-        refreshApex(that.SchedulerId);
         // that.getScheduleWrapperDataFromApex();
-        window.location.reload();
       })
       .catch((error) => {
         console.log("error --> ", {

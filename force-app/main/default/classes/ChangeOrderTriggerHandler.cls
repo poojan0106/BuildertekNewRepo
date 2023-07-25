@@ -102,7 +102,7 @@ public without sharing class ChangeOrderTriggerHandler {
                 budgetLine.buildertek__Unit_Price__c = newCO.buildertek__Total_Costs__c;
                 // budgetLine.buildertek__Markup__c = (newCO.buildertek__Margin__c / (1 - newCO.buildertek__Margin__c));
                 if(newCO.buildertek__Calculated_Margin__c != null){
-                    budgetLine.buildertek__Markup__c = (newCO.buildertek__Calculated_Margin__c/100)/(1-(newCO.buildertek__Calculated_Margin__c/100))*100;
+                    budgetLine.buildertek__Markup__c = (((newCO.Total_Costs__c - newCO.buildertek__Total_Amount_Tax__c)/newCO.Total_Costs__c)*100)*-1;
                 }
                 budgetLine.buildertek__Quantity__c = 1;
                 budgetLine.buildertek__Group__c = budgetLineGroupId;
@@ -1012,7 +1012,7 @@ public without sharing class ChangeOrderTriggerHandler {
 
         }
         if(!budgetItemSet.isEmpty()){
-            List<buildertek__Budget_Item__c> budgetItemList = [Select Id , Name , buildertek__Unit_Price__c, buildertek__Markup__c, buildertek__Quantity__c , (Select Id , Name , buildertek__Calculated_Margin__c , buildertek__Total_Costs__c From Change_Orders__r Where Id=:ids) From buildertek__Budget_Item__c WHERE Id=:budgetItemSet ];
+            List<buildertek__Budget_Item__c> budgetItemList = [Select Id , Name , buildertek__Unit_Price__c, buildertek__Markup__c, buildertek__Quantity__c , (Select Id , Name , buildertek__Calculated_Margin__c , buildertek__Total_Amount_Tax__c, buildertek__Total_Costs__c From Change_Orders__r Where Id=:ids) From buildertek__Budget_Item__c WHERE Id=:budgetItemSet ];
             System.debug(budgetItemList.size());
             if(budgetItemList.size() > 0){
                 for(buildertek__Budget_Item__c budgetItem: budgetItemList){
@@ -1022,7 +1022,8 @@ public without sharing class ChangeOrderTriggerHandler {
                         System.debug(budgetItem.buildertek__Unit_Price__c);
                         System.debug(changeOrder.Name+ 'CO NAME');
                         budgetItem.buildertek__Unit_Price__c= changeOrder.buildertek__Total_Costs__c;
-                        budgetItem.buildertek__Markup__c=(changeOrder.buildertek__Calculated_Margin__c/100)/(1-(changeOrder.buildertek__Calculated_Margin__c/100))*100;    
+                       //budgetItem.buildertek__Markup__c=(changeOrder.buildertek__Calculated_Margin__c/100)/(1-(changeOrder.buildertek__Calculated_Margin__c/100))*100; 
+                        budgetItem.buildertek__Markup__c = (((changeOrder.buildertek__Total_Costs__c - changeOrder.buildertek__Total_Amount_Tax__c)/changeOrder.Total_Costs__c)*100)*-1;   
 
                         // budgetItem.buildertek__Unit_Price__c= budgetItem.buildertek__Unit_Price__c+changeOrder.buildertek__Total_Costs__c;
                         // budgetItem.buildertek__Markup__c=budgetItem.buildertek__Markup__c+ (changeOrder.buildertek__Calculated_Margin__c/100)/(1-(changeOrder.buildertek__Calculated_Margin__c/100))*100;    

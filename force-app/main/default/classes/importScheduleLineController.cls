@@ -9,14 +9,7 @@ public without sharing class importScheduleLineController {
 
         buildertek__Schedule__c mainScheduleRec;
         if(String.isNotBlank(recordId)){
-            mainScheduleRec = [SELECT Id,
-                               Name,
-                               buildertek__Initial_Start_Date__c,
-                               buildertek__Start_Date__c,
-                               buildertek__End_Date__c,
-                               buildertek__Original_Start_Date__c,
-                               buildertek__Original_End_Date__c
-                               FROM buildertek__Schedule__c WHERE Id =:recordId limit 1];
+            mainScheduleRec = [SELECT Id, Name, buildertek__Initial_Start_Date__c, buildertek__Start_Date__c, buildertek__End_Date__c, buildertek__Original_Start_Date__c, buildertek__Original_End_Date__c FROM buildertek__Schedule__c WHERE Id =:recordId limit 1];
         }
         
         list<buildertek__Project_Task__c> existedScheduleitems = new list<buildertek__Project_Task__c>();
@@ -96,8 +89,16 @@ public without sharing class importScheduleLineController {
                 for (fieldWrapper wrapper : datalist){
                     System.debug('wrapper.Dependency ==> '+wrapper.Dependency);
                     if(String.isNotBlank(wrapper.Dependency)){
-                        System.debug('projectInsertTaskMap.get(wrapper.Dependency).Id ==> '+projectInsertTaskMap.get(wrapper.Dependency).Id);
-                        projectInsertTaskMap.get(wrapper.Name).buildertek__Dependency__c = projectInsertTaskMap.get(wrapper.Dependency).Id;
+                        if(projectInsertTaskMap.containsKey(wrapper.Dependency)){
+                            system.debug('inside If => ' + projectInsertTaskMap.get(wrapper.Dependency).Id);
+                            projectInsertTaskMap.get(wrapper.Name).buildertek__Dependency__c = projectInsertTaskMap.get(wrapper.Dependency).Id;
+
+                        }
+                        else{
+                            system.debug(wrapper.Dependency + ' This Dependany not present');
+                        }
+                    //     System.debug('projectInsertTaskMap.get(wrapper.Dependency).Id ==> '+projectInsertTaskMap.get(wrapper.Dependency).Id);
+                    //         System.debug('Dependency If '+ projectInsertTaskMap.get(wrapper.Dependency));
                     }
                 }
 
@@ -119,6 +120,63 @@ public without sharing class importScheduleLineController {
                 }
                 update newProjectTaskMap.values();
 
+                    // Milestone
+
+                    Map<String, buildertek__Project_Task__c> milestoneMap = new Map<String, buildertek__Project_Task__c>();
+                    Map<String, buildertek__Project_Task__c> projectNewTaskMap = new Map<String, buildertek__Project_Task__c>();
+                    List<buildertek__Project_Task__c> projectMilestoneInsert = new List<buildertek__Project_Task__c>();
+            
+                    List<Project_Task__c> task = [Select Id, Name, buildertek__Phase__c, buildertek__Start__c, buildertek__Finish__c,buildertek__Schedule__c, buildertek__Duration__c, buildertek__Milestone__c
+                                                FROM Project_Task__c
+                                                WHERE buildertek__Schedule__c = :recordId];
+            
+                    Map<String, Date> milestoneFinishDateMap = new Map<String, Date>();
+                    System.debug('recordId: ' + recordId);
+                    List<AggregateResult> milestonePhaseFinishDateList = [SELECT buildertek__Phase__c, MAX(buildertek__Finish__c) FROM buildertek__Project_Task__c 
+                    WHERE buildertek__Schedule__c = :recordId GROUP BY buildertek__Phase__c];
+            
+                    for (AggregateResult result : milestonePhaseFinishDateList) {
+                        String phase = (String)result.get('buildertek__Phase__c');
+                        Date finishDate = (Date)result.get('expr0');
+                        milestoneFinishDateMap.put(phase, finishDate);
+                    }
+            
+                    for (Project_Task__c tasks : task){
+                        System.debug('tasks: ' + tasks);
+                        if (!tasks.buildertek__Milestone__c){
+                            projectNewTaskMap.put(tasks.buildertek__Phase__c, tasks);
+                            System.debug('Milestone IF Condition: ');
+                        } else{
+                            milestoneMap.put(tasks.buildertek__Phase__c, tasks);
+                            System.debug('Milestone ELSE Condition: ');
+                        }
+                    }
+            
+                    for (Project_Task__c tasks : projectNewTaskMap.values()){
+                        System.debug('projectNewTaskMap Task: '+tasks);
+                        if (!milestoneMap.containsKey(tasks.buildertek__Phase__c) && !tasks.buildertek__Milestone__c){
+                            System.debug('Check Project Manager 5');
+                            System.debug('Check tasks.buildertek__Milestone__c'+tasks.buildertek__Milestone__c);
+                            System.debug('Check tasks.buildertek__Phase__c'+tasks.buildertek__Phase__c);
+                            if (tasks.buildertek__Phase__c != null){
+                                buildertek__Project_Task__c project = new buildertek__Project_Task__c();
+                                project.Name = 'Milestone Complete';
+                                project.buildertek__Phase__c = tasks.buildertek__Phase__c;
+                                project.buildertek__Start__c = milestoneFinishDateMap.get(tasks.buildertek__Phase__c);
+                                project.buildertek__Schedule__c = recordId;
+                                project.buildertek__Use_Project_Manager_from_Schedule__c = true;
+                                project.buildertek__Milestone__c = true;
+                                project.buildertek__Duration__c = 0;
+                                projectMilestoneInsert.add(project);
+                            }
+                        }
+                    }
+            
+                    System.debug('Project Task::' + projectMilestoneInsert);
+                    ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+                    insert projectMilestoneInsert;
+                    ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
+                
                 returnresponse = 'SUCCESS';
             } catch (Exception e){
                 returnresponse = 'ERROR'+' '+e.getMessage()+' '+e.getLineNumber();
