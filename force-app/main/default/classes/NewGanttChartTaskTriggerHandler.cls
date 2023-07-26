@@ -18,10 +18,18 @@ public with sharing class NewGanttChartTaskTriggerHandler {
                 if (phaseDateMap.containsKey(projectTask.buildertek__Phase__c)) {
                     Date endDate = phaseDateMap.get(projectTask.buildertek__Phase__c);
                     if (endDate < projectTask.buildertek__finish__c) {
-                        phaseDateMap.put(projectTask.buildertek__Phase__c, projectTask.buildertek__finish__c);
+                        if (projectTask.buildertek__finish__c == null) {
+                            phaseDateMap.put(projectTask.buildertek__Phase__c, projectTask.buildertek__Start__c);
+                        } else {
+                            phaseDateMap.put(projectTask.buildertek__Phase__c, projectTask.buildertek__finish__c);
+                        }
                     }
                 } else {
-                    phaseDateMap.put(projectTask.buildertek__Phase__c, projectTask.buildertek__finish__c);
+                    if (projectTask.buildertek__finish__c == null) {
+                        phaseDateMap.put(projectTask.buildertek__Phase__c, projectTask.buildertek__Start__c);
+                    } else {
+                        phaseDateMap.put(projectTask.buildertek__Phase__c, projectTask.buildertek__finish__c);
+                    }
                 }
             }
             
@@ -33,7 +41,9 @@ public with sharing class NewGanttChartTaskTriggerHandler {
                 buildertek__Project_Task__c task = phaseMileStoneMap.get(key);
                 task.buildertek__Start__c = phaseDateMap.get(key).addDays(1);
                 task.buildertek__finish__c = phaseDateMap.get(key).addDays(1);
-                mileStoneList.add(task);
+                if(key != null && key != ''){
+                    mileStoneList.add(task);
+                }
             } else {
                 buildertek__Project_Task__c task = new buildertek__Project_Task__c();
                 task.Name = 'Milestone Complete';
@@ -44,7 +54,9 @@ public with sharing class NewGanttChartTaskTriggerHandler {
                 task.buildertek__Schedule__c = scheduleId;
                 task.buildertek__Milestone__c = true;
                 task.buildertek__Type__c = 'Milestone';
-                mileStoneList.add(task);
+                if(key != null && key != ''){
+                    mileStoneList.add(task);
+                }
             }
         }
         NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;

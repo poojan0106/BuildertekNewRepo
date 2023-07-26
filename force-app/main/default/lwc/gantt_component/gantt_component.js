@@ -1187,7 +1187,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       // if(newTaskRecord.Id == "DemoGenretedId"){
       //     delete newTaskRecord.Id;
       // }
-      
+
       //
       // if(mapofphase.has(newTaskRecord.buildertek__Phase__c)){
       //   mapofphase[newTaskRecord.buildertek__Phase__c] = mapofphase.get(newTaskRecord.buildertek__Phase__c) + 1;

@@ -388,8 +388,6 @@ export default base => class GanttToolbar extends base {
     }
 
     onCollapseAllClick() {
-
-        // this.gantt.setTheme('dark')
         this.gantt.collapseAll();
     }
 

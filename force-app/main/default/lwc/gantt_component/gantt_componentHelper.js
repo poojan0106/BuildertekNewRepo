@@ -27,8 +27,6 @@ function formatApexDatatoJSData(scheduleData, scheduleItemsData, scheduleItemsDa
     firstRowDup["children"] = []
     firstRowDup["constraintType"] = 'startnoearlierthan'
     firstRowDup["constraintDate"] = ""
-    firstRowDup["eventColor"] = 'red'
-    firstRowDup["eventStyle"] = 'border'
     var newPhaseFlag = true;
     var taskWithphaseList = [];
     var taskPhaseRow;
@@ -36,13 +34,11 @@ function formatApexDatatoJSData(scheduleData, scheduleItemsData, scheduleItemsDa
     for(var i=0;i<taskListForPhase.length;i++){
         if(taskListForPhase[i].buildertek__Phase__c && taskPhaseRow){
             console.log('method 1 in helper');
-            
+
             if(taskPhaseRow['name'] != taskListForPhase[i].buildertek__Phase__c){
                 phIndex = phIndex+1;
                 taskPhaseRow = {}
                 taskPhaseRow["type"] = 'Phase'
-                taskPhaseRow["eventColor"] = 'red'
-                taskPhaseRow["eventStyle"] = 'border'
 
                 taskPhaseRow["id"] = taskListForPhase[i].buildertek__Schedule__c+"_"+taskListForPhase[i].buildertek__Phase__c
                 taskPhaseRow["name"] = taskListForPhase[i].buildertek__Phase__c
@@ -505,7 +501,7 @@ function convertJSONtoApexData(data, taskData, dependenciesData, resourceData) {
     let scheduleObj = {};
     var rowData = [];
     const phasedatamap = new Map();
-    // let milestonedataList = []; 
+    // let milestonedataList = [];
     console.log('data !-->', {data})
     if (data) {
         data.forEach(element => {

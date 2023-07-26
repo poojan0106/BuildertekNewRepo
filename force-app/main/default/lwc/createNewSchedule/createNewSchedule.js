@@ -208,20 +208,11 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
     }
 
     getLink(event) {
-        let nameToIdMap = {};
         let scheduleName = event.currentTarget.dataset.id;
-        console.log('scheduleName', scheduleName);
-
-        for (const obj of this.masterId) {
-            nameToIdMap[obj.Name] = obj.Id;
-        }
-        let val = this.masterId.find((schId) => schId.Name == scheduleName)
-        console.log('Id ===>:',val.Id);
-        debugger;
-        console.log('nameToIdMap:', nameToIdMap);
-        let link = nameToIdMap[scheduleName] || null;
-        this.url = `/${link}`
-        console.log(this.url);
+        let val = this.masterId.find((schId) => schId.Name == scheduleName);
+        console.log('ScheduleName:',scheduleName);
+        this.url = `/${val.Id}`
+        console.log('Url:',this.url);
     }
 
     disconnectedCallback() {

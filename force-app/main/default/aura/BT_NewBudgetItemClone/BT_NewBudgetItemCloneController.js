@@ -1846,8 +1846,10 @@
         component.set("v.duplicateExp", false);
         component.set("v.createNewSchedule", false);
         component.set("v.showSelectSchedule", false);
-        component.set("v.addSalesInvoiceSection", false);
-        component.set("v.selectedSalesInvoices", []);
+        component.set("v.addSalesInvoiceSection", false); // to close add sales invoice popup
+        component.set("v.selectedSalesInvoices", []); // to clear selected sales invoices
+        component.set('v.allSLChecked', false); // for check-all checkbox
+
 
 
         component.set("v.expenseDescription", null);
@@ -1860,7 +1862,7 @@
         component.set("v.expenseNote", null);
         component.set('v.budgetItemId', '');
 
-        $A.get('e.force:refreshView').fire();
+        // $A.get('e.force:refreshView').fire();
     },
     importCSV: function (component, event, helper) {
 
@@ -4159,23 +4161,25 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
 
     checkSalesInvoice: function (component, event, helper){
         // component.find("selectAllPO").set("v.checked", checkedAll);
+        var salesinvoiceRecords = component.get('v.salesInvoices')
         var selectedSalesInvoices = component.get('v.selectedSalesInvoices');
         var Selectedvalue = event.getSource().get("v.id");
         console.log('id : ', Selectedvalue);
         var isChecked = event.getSource().get("v.checked");
-        // selectedSalesInvoices = isChecked ? selectedSalesInvoices.push(Selectedvalue) : selectedSalesInvoices.filter((e) => e !== Selectedvalue);
         if(isChecked == true){
             // console.log('checked Id :: ', Selectedvalue);
             selectedSalesInvoices.push(Selectedvalue);
         }
         else if(isChecked == false){
-                selectedSalesInvoices = selectedSalesInvoices.filter((e) => e !== Selectedvalue);
+            selectedSalesInvoices = selectedSalesInvoices.filter((e) => e !== Selectedvalue);
         }
+        var IsallChecked = selectedSalesInvoices.length == salesinvoiceRecords.length ? true : false;
+        component.set('v.allSLChecked', IsallChecked); // for check-all checkbox
         component.set('v.selectedSalesInvoices', selectedSalesInvoices);
-        console.log('Selected Ids =: ', component.get('v.selectedSalesInvoices'));
-
-
+        // console.log('IsallChecked : ' , IsallChecked);
+        // console.log('Selected Ids =: ', component.get('v.selectedSalesInvoices'));
     },
+
     checkAllSalesInvoice : function (component, event, helper){
         component.set("v.selectedSalesInvoices", []);
         var isChecked = component.find("checkAllSalesInvoice").get("v.checked");
@@ -4197,7 +4201,7 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
 
     },
 
-    updateSalesInvoices: function(component, event, helper) {
+    AddNewSalesInvoices: function(component, event, helper) {
         var SLlist = component.get('v.selectedSalesInvoices');
         if(SLlist.length == 0){
             var toastEvent = $A.get("e.force:showToast");
@@ -4214,7 +4218,7 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
             }).fire();
             console.log('into update');
             var BudgetId = component.get('v.recordId');
-           var action = component.get("c.CreateNewBudgetLine");
+           var action = component.get("c.UpdateSalesInvoices");
            action.setParams({
             'SLIDlist' : SLlist,
             'BudgetId' : BudgetId
@@ -4225,7 +4229,7 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
                     "action": "HIDE"
                 }).fire();
                 console.log('Response =: ', response.getReturnValue());
-                if(response.getReturnValue() ==  'success'){
+                // if(response.getReturnValue() ==  'success'){
                     var toastEvent = $A.get("e.force:showToast");
                     toastEvent.setParams({
                         type: 'SUCCESS',
@@ -4233,18 +4237,11 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
                         duration: '5000',
                     });
                     toastEvent.fire();    
-                    component.set("v.addSalesInvoiceSection", false);
-                    component.set("v.selectedSalesInvoices", []);
-                }
-                else{
-                    var toastEvent = $A.get("e.force:showToast");
-                    toastEvent.setParams({
-                        type: 'ERROR',
-                        message: 'Error',
-                        duration: '5000',
-                    });
-                    toastEvent.fire(); 
-                }
+                    component.set("v.addSalesInvoiceSection", false); // to close popup
+                    component.set("v.selectedSalesInvoices", []); // to clear selected sales invoics
+                    component.set('v.allSLChecked', false); // for check-all checkbox
+                    $A.get("e.force:refreshView").fire();
+
 
             }
             else if(response.getState() == 'Error'){

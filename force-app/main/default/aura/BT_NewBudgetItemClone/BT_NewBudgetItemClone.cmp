@@ -225,9 +225,7 @@
     <aura:attribute name="RecordEnd" type="integer" default="0" />
     <aura:attribute name="currencycode" type="String" />
     <aura:attribute name="multicurrency" type="Boolean" />
-    <aura:attribute name="addSalesInvoiceSection" type="boolean" default="false"/>
-    <aura:attribute name="salesInvoices" type="Billings__c[]" />
-    <aura:attribute name="selectedSalesInvoices" type="List" default="[]" access="public"/>
+
     <!-- Pagination Start -->
 
     <aura:attribute name="page" type="integer" description="using for store page Number" />
@@ -269,6 +267,13 @@
 
     <aura:attribute name="isExpandGrp" type="Boolean" default="false" />
     <aura:attribute name="isSelected" type="Boolean" />
+
+     <!-- Add Sales Invoice Data Start -->
+     <aura:attribute name="addSalesInvoiceSection" type="boolean" default="false"/>
+     <aura:attribute name="salesInvoices" type="Billings__c[]" />
+     <aura:attribute name="selectedSalesInvoices" type="List" default="[]" access="public"/>
+     <aura:attribute name="allSLChecked" type="boolean" default="false" />
+     <!-- Add Sales Invoice Data Start -->
 
 
     <force:recordData aura:id="newforcerecord" layoutType="FULL" recordId="{!v.recordId}" targetRecord="{!v.newRecord}" targetFields="{!v.sampleNewRecord}" targetError="{!v.newRecordError}" />
@@ -1303,7 +1308,7 @@
             <aura:if isTrue="{!v.isNewExpense}">
                 <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
                     <div class="slds-modal__container Expensemodal">
-                        <div aura:id="poContainer" class="c-container">
+                        <div aura:id="poContainer" class="c-container" >
                             <header class="slds-modal__header">
                                 <lightning:buttonIcon iconName="utility:close" onclick="{! c.doCancel }" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
                                 <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Expense
@@ -1954,12 +1959,13 @@
             <aura:if isTrue="{!v.addSalesInvoiceSection}">
                 <aura:html tag="style">
                     .slds-modal__container{
-                        max-width:60rem !important;
+                        max-width: 50rem;
+                        width: 60%;
                     }
                 </aura:html>
                 <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
                     <div class="slds-modal__container" style="width: 70%;">
-                        <div aura:id="poContainer" class="c-container" style="position: relative; height:90vh" >
+                        <div aura:id="poContainer" class="c-container"  >
                             <header class="slds-modal__header">
                                 <lightning:buttonIcon iconName="utility:close" onclick="{!c.doCancel}" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
                                 <p></p>
@@ -1967,12 +1973,12 @@
                                 </h2>
                                 <p></p>
                             </header>
-                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="height:80%">
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="height: fit-content; max-height: 70vh;">
                                 <table class="slds-table slds-table_bordered slds-table_cell-buffer">
                                     <thead>
                                         <tr class="slds-text-title_caps">
                                             <th scope="col" class="slds-truncate">
-                                                <lightning:input aura:id="checkAllSalesInvoice" type="checkbox" name="checkAll" onchange="{!c.checkAllSalesInvoice}" />
+                                                <lightning:input aura:id="checkAllSalesInvoice" type="checkbox" name="checkAll" checked="{!v.allSLChecked}" onchange="{!c.checkAllSalesInvoice}" />
                                             </th>
                                             <th scope="col">
                                                 <div class="slds-truncate" title="Duration">Name</div>
@@ -2015,7 +2021,7 @@
                             </div>
                             <footer class="slds-modal__footer">
                                 <lightning:button variant="neutral" title="Cancel" label="Cancel" onclick="{! c.doCancel }" />
-                                <lightning:button variant="brand" type="submit" name="Save" label="Save" onclick="{!c.updateSalesInvoices}" />
+                                <lightning:button variant="brand" type="submit" name="Save" label="Save" onclick="{!c.AddNewSalesInvoices}" />
                             </footer>
                         </div>
                     </div>
