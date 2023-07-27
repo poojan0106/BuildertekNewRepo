@@ -14,7 +14,7 @@ private class bryntumGanttControllerTest {
 
         buildertek__Schedule__c schedule = new buildertek__Schedule__c();
         schedule.buildertek__Description__c='Test Description';
-        // schedule.buildertek__Project__c=project.Id;
+        schedule.buildertek__Type__c='Standard';
         insert schedule;
 
         ProjectTaskTriggerHandler.blnSkipTaskTrigger=true;

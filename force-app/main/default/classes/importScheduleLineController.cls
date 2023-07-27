@@ -2,6 +2,7 @@ public without sharing class importScheduleLineController {
     @AuraEnabled
     public static string insertData(String recordId, String strFileData){
         String returnresponse = '';
+        System.debug('strFileData: ' + strFileData);
         Map<String, buildertek__Project_Task__c> projectInsertTaskMap = new Map<String, buildertek__Project_Task__c>();
         List<fieldWrapper> datalist = (List<fieldWrapper>)JSON.deserialize(strFileData, List<fieldWrapper>.class);
         Map<String, String> myMap = new Map<String, String>();
@@ -78,7 +79,9 @@ public without sharing class importScheduleLineController {
         }
         if (projectInsertTaskMap.size() > 0){
             try{
+                ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
                 insert projectInsertTaskMap.values();
+                ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
                 
                 Set<Id> taskIds = new Set<Id>();
                 for (String key : projectInsertTaskMap.keySet()) {
@@ -101,9 +104,9 @@ public without sharing class importScheduleLineController {
                     //         System.debug('Dependency If '+ projectInsertTaskMap.get(wrapper.Dependency));
                     }
                 }
-
+                ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
                 update projectInsertTaskMap.values();
-
+                ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
 
                 Map<String, buildertek__Project_Task__c> newProjectTaskMap = new Map<String, buildertek__Project_Task__c>([SELECT Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Schedule__c, buildertek__Duration__c, buildertek__Milestone__c, buildertek__Dependency__c, buildertek__Order__c FROM Project_Task__c WHERE Id IN: taskIds ORDER BY buildertek__Order__c ASC]);
 
@@ -119,63 +122,6 @@ public without sharing class importScheduleLineController {
                     System.debug('New newProjectTaskMap.get(key) ==> '+newProjectTaskMap.get(key));
                 }
                 update newProjectTaskMap.values();
-
-                    // Milestone
-
-                    Map<String, buildertek__Project_Task__c> milestoneMap = new Map<String, buildertek__Project_Task__c>();
-                    Map<String, buildertek__Project_Task__c> projectNewTaskMap = new Map<String, buildertek__Project_Task__c>();
-                    List<buildertek__Project_Task__c> projectMilestoneInsert = new List<buildertek__Project_Task__c>();
-            
-                    List<Project_Task__c> task = [Select Id, Name, buildertek__Phase__c, buildertek__Start__c, buildertek__Finish__c,buildertek__Schedule__c, buildertek__Duration__c, buildertek__Milestone__c
-                                                FROM Project_Task__c
-                                                WHERE buildertek__Schedule__c = :recordId];
-            
-                    Map<String, Date> milestoneFinishDateMap = new Map<String, Date>();
-                    System.debug('recordId: ' + recordId);
-                    List<AggregateResult> milestonePhaseFinishDateList = [SELECT buildertek__Phase__c, MAX(buildertek__Finish__c) FROM buildertek__Project_Task__c 
-                    WHERE buildertek__Schedule__c = :recordId GROUP BY buildertek__Phase__c];
-            
-                    for (AggregateResult result : milestonePhaseFinishDateList) {
-                        String phase = (String)result.get('buildertek__Phase__c');
-                        Date finishDate = (Date)result.get('expr0');
-                        milestoneFinishDateMap.put(phase, finishDate);
-                    }
-            
-                    for (Project_Task__c tasks : task){
-                        System.debug('tasks: ' + tasks);
-                        if (!tasks.buildertek__Milestone__c){
-                            projectNewTaskMap.put(tasks.buildertek__Phase__c, tasks);
-                            System.debug('Milestone IF Condition: ');
-                        } else{
-                            milestoneMap.put(tasks.buildertek__Phase__c, tasks);
-                            System.debug('Milestone ELSE Condition: ');
-                        }
-                    }
-            
-                    for (Project_Task__c tasks : projectNewTaskMap.values()){
-                        System.debug('projectNewTaskMap Task: '+tasks);
-                        if (!milestoneMap.containsKey(tasks.buildertek__Phase__c) && !tasks.buildertek__Milestone__c){
-                            System.debug('Check Project Manager 5');
-                            System.debug('Check tasks.buildertek__Milestone__c'+tasks.buildertek__Milestone__c);
-                            System.debug('Check tasks.buildertek__Phase__c'+tasks.buildertek__Phase__c);
-                            if (tasks.buildertek__Phase__c != null){
-                                buildertek__Project_Task__c project = new buildertek__Project_Task__c();
-                                project.Name = 'Milestone Complete';
-                                project.buildertek__Phase__c = tasks.buildertek__Phase__c;
-                                project.buildertek__Start__c = milestoneFinishDateMap.get(tasks.buildertek__Phase__c);
-                                project.buildertek__Schedule__c = recordId;
-                                project.buildertek__Use_Project_Manager_from_Schedule__c = true;
-                                project.buildertek__Milestone__c = true;
-                                project.buildertek__Duration__c = 0;
-                                projectMilestoneInsert.add(project);
-                            }
-                        }
-                    }
-            
-                    System.debug('Project Task::' + projectMilestoneInsert);
-                    ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
-                    insert projectMilestoneInsert;
-                    ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
                 
                 returnresponse = 'SUCCESS';
             } catch (Exception e){
@@ -184,31 +130,6 @@ public without sharing class importScheduleLineController {
         }
         return returnresponse;
     }
-
-    // public static Date addDaysSkippingWeekends(Date startDate, Integer duration){
-
-    //     System.debug('addDaysSkippingWeekends');
-    //     System.debug('original startDate ==> '+startDate);
-    //     System.debug('original duration ==> '+duration);
-    //     Date startDates = Date.newInstance(startDate.year(), startDate.month(), startDate.day());
-    //     Integer addedDays = 0;
-
-    //     while (addedDays < duration) {
-    //         startDates = startDates.addDays(1);
-    //         System.debug('startDates ==> '+startDates);
-    //         DateTime currentDate = DateTime.newInstance(startDates.year(), startDates.month(), startDates.day());
-    //         System.debug('currentDate ==> '+currentDate);
-    //         String todayDay = currentDate.format('EEEE');
-    //         System.debug('todayDay ==> '+todayDay);
-    //         if (todayDay != 'Saturday' && todayDay != 'Sunday') {
-    //             System.debug('addedDays ==> '+addedDays);
-    //             ++addedDays;
-    //         }
-    //     }
-
-    //     Date endDate = startDates.addDays(-1); 
-    //     return endDate;
-	// }
 
     // Skip weekend and calculate date
 	public static Date addDaysSkippingWeekends(Date sDate, Integer days){
