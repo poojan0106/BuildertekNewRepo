@@ -556,15 +556,15 @@ public with sharing class bryntumGanttController {
     }
 
     @AuraEnabled
-    public static String upsertDataOnSaveChanges(String scheduleRecordStr, String taskRecordsStr, List<String> listOfRecordsToDelete, String dependenciesDatamap, String taskIdAndRecordDataMap){
+    public static String upsertDataOnSaveChanges(String scheduleRecordStr, String taskRecordsStr, List<String> listOfRecordsToDelete){
         String msg;
         buildertek__Schedule__c scheduleRecord = (buildertek__Schedule__c)System.JSON.deserialize(scheduleRecordStr, buildertek__Schedule__c.class);
         List<buildertek__Project_Task__c> taskRecords = (List<buildertek__Project_Task__c>)System.JSON.deserialize(taskRecordsStr, List<buildertek__Project_Task__c>.class);
         // Map<Id, buildertek__Project_Task__c> IdandRecordMap = (Map<Id, buildertek__Project_Task__c>)System.JSON.deserialize(taskIdAndRecordDataMap, Map<Id, buildertek__Project_Task__c>.class);
         // Map<String, Object> IdandRecordMap = (Map<String, Object>)JSON.deserializeUntyped(taskIdAndRecordDataMap);
-        System.debug('taskIdAndRecordDataMap :--> '+taskIdAndRecordDataMap);
-        Map<String, Object> IdandRecordMap = (Map<String, Object>)System.JSON.deserializeUntyped(taskIdAndRecordDataMap);
-        System.debug('upsertDataonSaveChanges IdandRecordMap :- '+ IdandRecordMap);
+        // System.debug('taskIdAndRecordDataMap :--> '+taskIdAndRecordDataMap);
+        // Map<String, Object> IdandRecordMap = (Map<String, Object>)System.JSON.deserializeUntyped(taskIdAndRecordDataMap);
+        // System.debug('upsertDataonSaveChanges IdandRecordMap :- '+ IdandRecordMap);
         try {
             System.debug('listOfRecordsToDelete '+listOfRecordsToDelete);
             System.debug('listOfRecordsToDelete size '+listOfRecordsToDelete.size());

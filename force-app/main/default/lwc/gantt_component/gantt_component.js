@@ -627,7 +627,9 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       calendarsData: data.calendars.rows,
     });
 
-    console.log("project:-", project);
+    project.hoursPerDay = 8;
+    project.calendar = 'business';
+
     const gantt = new bryntum.gantt.Gantt({
       project,
       appendTo: this.template.querySelector(".container"),
@@ -705,6 +707,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
           type: "enddate",
           allowedUnits: "datetime",
           draggable: false,
+          editor: false,
         },
         {
           type: "duration",
@@ -1003,6 +1006,11 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
               items: {
                 // Remove "% Complete","Effort", and the divider in the "General" tab
                 effort: false,
+                // flex:5,
+                endDate: false,
+                startDate: {
+                  weight: 100,
+                },
                 divider: false,
                 newCustomField: {
                   type: "Combo",
@@ -1220,29 +1228,29 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     ); //!helper method to get list of string to delete
 
     console.log('taskdata:- ', taskData);
-    var mapofphase = {};
-    var listofmilestone = [];
+    // var mapofphase = {};
+    // var listofmilestone = [];
     var newtasklistafterid = [];
-    var taskidrecordMap = new Map();
+    // var taskidrecordMap = new Map();
     taskData.forEach(newTaskRecord => {
 
       console.log('infor loop newTaskrecord');
       var demoidvar = newTaskRecord.Id
       var demoidvar2 = newTaskRecord.buildertek__Dependency__c
       console.log('demoidvar:- ', demoidvar);
-      taskidrecordMap.set(newTaskRecord.Id, newTaskRecord);
+      // taskidrecordMap.set(newTaskRecord.Id, newTaskRecord);
 
       if (demoidvar != undefined || demoidvar != null) {
         if (demoidvar.includes("_generatedt_")) {
           console.log('newTaskRecord:- ', newTaskRecord);
           delete newTaskRecord.Id
           console.log('newTaskRecord2:- ', newTaskRecord);
-        } 
+        }
       }
       if (demoidvar2 != undefined || demoidvar2 != null) {
         if (demoidvar2.includes("_generatedt_")) {
           delete newTaskRecord.buildertek__Dependency__c
-        } 
+        }
       }
       newtasklistafterid.push(newTaskRecord);
     });
@@ -1250,13 +1258,14 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     console.log('taskData before apex:- ', newtasklistafterid);
     var that = this;
     console.log('Dependency Data map :- ', dependenciesDatamap)
-    console.log('Task id and record Data map :- ', JSON.stringify(taskidrecordMap))
+    // console.log('Task id and record Data map :- ', taskidrecordMap)
+    // console.log('Task id and record Data map :- ', JSON.stringify(taskidrecordMap))
     upsertDataOnSaveChanges({
         scheduleRecordStr: JSON.stringify(scheduleData),
         taskRecordsStr: JSON.stringify(newtasklistafterid),
         listOfRecordsToDelete: listOfRecordsToDelete,
-        dependenciesDatamap: JSON.stringify(dependenciesDatamap),
-        taskIdAndRecordDataMap :JSON.stringify(taskidrecordMap)
+        // dependenciesDatamap: JSON.stringify(dependenciesDatamap),
+        // taskIdAndRecordDataMap :JSON.stringify(taskidrecordMap)
       })
       .then(function (response) {
         console.log("response ", {

@@ -389,6 +389,9 @@
                                         <!-- <lightning:button label="Import CSV" onclick="{!c.importCSV}"/> -->
                                         <!--  <lightning:button label="Save" onclick="{!c.saveQuoteItems}"/> -->
                                         <lightning:button label="Delete Lines" onclick="{!c.deleteSelectedBudgetItem}" class="sldsButtonGroup" />
+                                        <aura:if isTrue="{!v.isbudget}">
+                                                <lightning:button label="Cancel" onclick="{!c.closetab}" class="sldsButtonGroup" />
+                                        </aura:if>
                                         <!--</aura:if>-->
                                         <!--<div class="slds-align_absolute-center">-->
                                         <aura:if isTrue="{!v.showButtons}">
