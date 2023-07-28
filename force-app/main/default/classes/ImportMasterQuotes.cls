@@ -227,8 +227,14 @@ public with sharing class ImportMasterQuotes {
                 msg.Status = 'Success';
                 msg.Message = 'Quote Lines Imported Successfully';
             }else{
-                msg.Status = 'Failed';
-                msg.Message = 'There were no Quote Lines for the selected Quote';    
+                // msg.Status = 'Failed';
+                // msg.Message = 'There were no Quote Lines for the selected Quote';  
+
+                // Updated by: Poojan Gabani
+                // Date:28-07-2023  Ticket No: BUIL-3436.
+                // just changed the Error message to Sucess Message.
+                msg.Status = 'Success';
+                msg.Message = 'You have imported a Master Quote which has no Quote Lines.';
             }
             return msg;
         }catch(Exception exp){
