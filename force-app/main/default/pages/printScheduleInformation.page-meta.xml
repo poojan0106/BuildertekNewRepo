@@ -6,7 +6,11 @@
     <label>printScheduleInformation</label>
     <packageVersions>
         <majorNumber>1</majorNumber>
+<<<<<<< HEAD
         <minorNumber>20</minorNumber>
+=======
+        <minorNumber>19</minorNumber>
+>>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
         <namespace>sf_chttr_apps</namespace>
     </packageVersions>
     <packageVersions>

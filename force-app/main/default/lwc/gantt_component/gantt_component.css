@@ -2,10 +2,13 @@
     height : 81vh;
 }
 
+<<<<<<< HEAD
 .b-field-inner{
     border:none !important
 }
 
+=======
+>>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 .b-float-root {
     z-index: 100;
 }
@@ -67,6 +70,7 @@
     }
   }
 
+<<<<<<< HEAD
   progress {
     transform: rotate(-90deg);
     width: 1.5em;
@@ -93,4 +97,6 @@
     border-top-left-radius: 3px;
   }
 
+=======
+>>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 /* Spinner end */

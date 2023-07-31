@@ -1,5 +1,8 @@
 ({
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
     getcurr: function(component, event, helper) {
         var action = component.get("c.getRfqTo");
         action.setCallback(this, function(response) {

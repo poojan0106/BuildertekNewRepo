@@ -1,5 +1,6 @@
 ({
 	doInit : function(component, event, helper) {
+<<<<<<< HEAD
         component.set("v.Spinner", true);
         var dbAction = component.get("c.getTemplates");
         dbAction.setCallback(this, function(response) {
@@ -96,5 +97,17 @@
     pdf.save("exported_file.pdf");
 
 
+=======
+        // var url = location.href;
+        // var baseURL = url.substring(0, url.indexOf('/', 14));
+        // component.set("v.BaseURL",baseURL);
+        component.set("v.Spinner",true);
+        window.setTimeout(
+            $A.getCallback(function() {
+                component.set("v.Spinner", false); 
+                $A.get("e.force:closeQuickAction").fire();
+            }), 7000
+        );
+>>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
     }
 })
