@@ -263,7 +263,6 @@
 
 
     },
-<<<<<<< HEAD
     closetabs: function(component, event, helper) {
         var workspaceAPI = component.find("workspace");
         workspaceAPI.getFocusedTabInfo().then(function (response) {
@@ -294,8 +293,6 @@
                   console.log('error: ' + error);
               }));
     },
-=======
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 
 
 

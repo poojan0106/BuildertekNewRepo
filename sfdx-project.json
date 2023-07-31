@@ -5,6 +5,7 @@
       "default": true
     }
   ],
+  "name": "BT DEV",
   "name": "buildertek_4th_July",
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",

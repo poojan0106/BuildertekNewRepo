@@ -1,6 +1,5 @@
 ({
 	doInit : function(component, event, helper) {
-<<<<<<< HEAD
         component.set("v.Spinner", true);
         var dbAction = component.get("c.getTemplates");
         dbAction.setCallback(this, function(response) {
@@ -73,41 +72,41 @@
     },
     downloadFile:function(component, event, helper) {
         var data= component.get("v.quoteLines");
+        console.log({data});
         
         // var hidden_a = document.createElement('a'); 
         // hidden_a.setAttribute('href', 'data:application/pdf;charset=utf-8,' + encodeURIComponent(data)); 
         // hidden_a.setAttribute('download', "text_file.pdf"); 
         // document.body.appendChild(hidden_a); hidden_a.click(); 
 
+        // Create a new Blob object from the result attribute.
+        // const blob = new Blob([data], { type: 'application/pdf' });
 
-        // Get the HTML content of the page
-        // const html = document.querySelector("body").innerHTML;
+        // // Create a new anchor element with the download attribute set.
+        // const a = document.createElement('a');
+        // a.setAttribute('href', window.URL.createObjectURL(blob));
+        // a.setAttribute('download', 'my-file.pdf');
 
-        const htmlContent = document.getElementById("contentToExport").innerHTML;
+        // // Append the anchor element to the document body.
+        // document.body.appendChild(a);
 
-    // Create a new jsPDF instance
-    const pdf = new jsPDF();
+        // // Click the anchor element to download the PDF file.
+        // a.click();
 
-    // Convert the HTML content to PDF
-    pdf.fromHTML(htmlContent, 15, 15, {
-      width: 170,
-    });
+        // // Remove the anchor element from the document body.
+        // document.body.removeChild(a);
 
-    // Save the PDF
-    pdf.save("exported_file.pdf");
+        let doc = new jsPDF(); 
+        console.log({doc});
+        doc.text(20, 20, 'Hello, this is a test PDF!');
 
+        // Save the PDF
+        doc.save('test.pdf');
 
-=======
-        // var url = location.href;
-        // var baseURL = url.substring(0, url.indexOf('/', 14));
-        // component.set("v.BaseURL",baseURL);
-        component.set("v.Spinner",true);
-        window.setTimeout(
-            $A.getCallback(function() {
-                component.set("v.Spinner", false); 
-                $A.get("e.force:closeQuickAction").fire();
-            }), 7000
-        );
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
+        
+    },
+
+    afterScriptsLoaded:function(component, event, helper) {
+        console.log('SCRIPT LOADED SUCCESFULLY::');
     }
 })

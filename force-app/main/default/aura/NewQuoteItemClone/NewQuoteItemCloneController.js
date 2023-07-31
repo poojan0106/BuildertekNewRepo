@@ -35,23 +35,17 @@
                 iconAlt: 'View Quote Lines'
             });
         });
-<<<<<<< HEAD
 
-        var mainDiv = component.find("av").getElement();
-        var Element = document.getElementById("slds");
-        console.log('bottom => ', Element.clientTop);
-=======
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
+        // var mainDiv = component.find("av").getElement();
+        // var Element = document.getElementById("slds");
+        // console.log('bottom => ', Element.clientTop);
     },
 
     doInit: function(component, event, helper) {
         component.set("v.Spinner2", true);
         component.set('v.runFirstTime' , true);
         var workspaceAPI = component.find("workspace");
-<<<<<<< HEAD
 
-=======
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
         // workspaceAPI.getEnclosingTabId().then((response) => {
         //     let opendTab = response.tabId;
         //     workspaceAPI.setTabLabel({

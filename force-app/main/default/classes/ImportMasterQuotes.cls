@@ -205,11 +205,8 @@ public with sharing class ImportMasterQuotes {
                                                     buildertek__Section_VI__c, buildertek__Section_VII__c, buildertek__Section_VIII__c, buildertek__Section_X__c, 
                                                     buildertek__Section_IX__c, buildertek__Footer__c FROM buildertek__Quote__c WHERE Id =:recordId];
 
-<<<<<<< HEAD
                                                     
 
-=======
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
                     if(!quoteItemList.isEmpty()){
                         quote.buildertek__Memo__c = quoteItemList[0].buildertek__Quote__r.buildertek__Memo__c;
                         quote.buildertek__Email_Body__c = quoteItemList[0].buildertek__Quote__r.buildertek__Email_Body__c;
@@ -238,7 +235,6 @@ public with sharing class ImportMasterQuotes {
                 // Updated by: Poojan Gabani
                 // Date:28-07-2023  Ticket No: BUIL-3436.
                 // just changed the Error message to Sucess Message.
-<<<<<<< HEAD
                 buildertek__Quote__c quote = [SELECT Id, Name, buildertek__Memo__c, buildertek__Email_Body__c, buildertek__Section_I__c, 
                                                     buildertek__Section_II__c, buildertek__Section_III__c, buildertek__Section_IV__c, buildertek__Section_V__c, 
                                                     buildertek__Section_VI__c, buildertek__Section_VII__c, buildertek__Section_VIII__c, buildertek__Section_X__c, 
@@ -267,8 +263,6 @@ public with sharing class ImportMasterQuotes {
                     //     quote.buildertek__Email_Body__c = masterQuoteItemList[0].buildertek__Master_Quote__r.buildertek__Email_Body__c;
                     // }
                     update quote;
-=======
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
                 msg.Status = 'Success';
                 msg.Message = 'You have imported a Master Quote which has no Quote Lines.';
             }

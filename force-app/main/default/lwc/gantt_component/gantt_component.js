@@ -1,5 +1,4 @@
 /* globals bryntum : true */
-<<<<<<< HEAD
 import { api, LightningElement, track, wire } from "lwc";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import { loadScript, loadStyle } from "lightning/platformResourceLoader";
@@ -8,30 +7,6 @@ import GanttStyle from "@salesforce/resourceUrl/BT_Bryntum_NewGanttCss";
 import GANTTModule from "@salesforce/resourceUrl/BT_Bryntum_NewGantt_ModuleJS";
 import { NavigationMixin } from "lightning/navigation";
 import { refreshApex } from "@salesforce/apex";
-=======
-import {
-  api,
-  LightningElement,
-  track,
-  wire
-} from "lwc";
-import {
-  ShowToastEvent
-} from "lightning/platformShowToastEvent";
-import {
-  loadScript,
-  loadStyle
-} from "lightning/platformResourceLoader";
-
-import GanttStyle from "@salesforce/resourceUrl/BT_Bryntum_NewGanttCss";
-import GANTTModule from "@salesforce/resourceUrl/BT_Bryntum_NewGantt_ModuleJS";
-import {
-  NavigationMixin
-} from "lightning/navigation";
-import {
-  refreshApex
-} from "@salesforce/apex";
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 
 // import GanttStyle from "@salesforce/resourceUrl/BT_Bryntum_NewGanttCss";
 import GanttToolbarMixin from "./lib/GanttToolbar";
@@ -44,13 +19,7 @@ import {
   formatApexDatatoJSData,
   recordsTobeDeleted,
 } from "./gantt_componentHelper";
-<<<<<<< HEAD
 import { populateIcons } from "./lib/BryntumGanttIcons";
-=======
-import {
-  populateIcons
-} from "./lib/BryntumGanttIcons";
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 import bryntum_gantt from "@salesforce/resourceUrl/bryntum_gantt";
 
 export default class Gantt_component extends NavigationMixin(LightningElement) {
@@ -188,7 +157,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 
   loadLibraries() {
     Promise.all([
-<<<<<<< HEAD
       console.log("Lodding libraries"),
       // loadScript(this, GANTT + "/gantt.lwc.module.min.js"),
       // loadStyle(this, GANTT + "/gantt.stockholm-1.css"),
@@ -197,16 +165,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       console.log("Loaded libraries"),
       // loadStyle(this, GanttStyle + "/gantt.stockholm.css")
     ])
-=======
-        console.log("Lodding libraries"),
-        // loadScript(this, GANTT + "/gantt.lwc.module.min.js"),
-        // loadStyle(this, GANTT + "/gantt.stockholm-1.css"),
-        loadScript(this, GANTTModule),
-        loadStyle(this, GanttStyle + "/gantt.stockholm.css"),
-        console.log("Loaded libraries"),
-        // loadStyle(this, GanttStyle + "/gantt.stockholm.css")
-      ])
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
       .then(() => {
         // this.handleHideSpinner();
         console.log("lib loaded");
@@ -234,12 +192,8 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     this.dispatchEvent(
       new ShowToastEvent({
         title: "Success",
-<<<<<<< HEAD
         message:
           uploadedFiles.length +
-=======
-        message: uploadedFiles.length +
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
           " Files uploaded Successfully: " +
           uploadedFileNames,
         variant: "success",
@@ -274,13 +228,8 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 
   getScheduleWrapperDataFromApex() {
     scheduleWrapperDataFromApex({
-<<<<<<< HEAD
       scheduleid: this.SchedulerId,
     })
-=======
-        scheduleid: this.SchedulerId,
-      })
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
       .then((response) => {
         console.log("response ", JSON.parse(JSON.stringify(response)));
         var records = response;
@@ -333,11 +282,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
               taskMap.has(scheduleItemsList[i].buildertek__Phase__c) &&
               i == taskMap.get(scheduleItemsList[i].buildertek__Phase__c) &&
               scheduleItemsMap.get(scheduleItemsList[i].buildertek__Phase__c) !=
-<<<<<<< HEAD
                 undefined
-=======
-              undefined
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
             ) {
               scheduleItemsListClone.push(
                 scheduleItemsMap.get(scheduleItemsList[i].buildertek__Phase__c)
@@ -668,16 +613,11 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     });
 
     project.hoursPerDay = 8;
-<<<<<<< HEAD
     project.calendar = "business";
-=======
-    project.calendar = 'business';
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 
     const gantt = new bryntum.gantt.Gantt({
       project,
       appendTo: this.template.querySelector(".container"),
-<<<<<<< HEAD
       rowHeight         : 40,
       barMargin         : 6,
       tbar: new GanttToolbar(),
@@ -685,15 +625,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       dependencyIdField: "sequenceNumber",
       columns: [
         {
-=======
-      // startDate: "2019-07-01",
-      // endDate: "2019-10-01",
-
-      tbar: new GanttToolbar(),
-
-      dependencyIdField: "sequenceNumber",
-      columns: [{
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
           type: "wbs",
           draggable: false,
         },
@@ -702,21 +633,14 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
           draggable: false,
           showCircle: true,
           width: 100,
-<<<<<<< HEAD
           text: "% Complete",
-=======
-          text: "% Complete"
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
         },
         {
           type: "name",
           draggable: false,
           width: 250,
           renderer: (record) => {
-<<<<<<< HEAD
 
-=======
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
             populateIcons(record);
             if (record.record._data.type == "Phase") {
               record.record.readOnly = true;
@@ -738,7 +662,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
             } else {
               return record.value;
             }
-<<<<<<< HEAD
 
             children : [
               {
@@ -766,8 +689,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                   ]
               }
             ]
-=======
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
           },
         },
         {
@@ -851,7 +772,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         //   },
         // },
         // //Added for Contractor
-<<<<<<< HEAD
         {
           type: "widget",
           text: "Contractor",
@@ -867,8 +787,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
             },
           ],
         },
-=======
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
         // {
         //   text: "Contractor",
         //   draggable: false,
@@ -975,7 +893,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
           draggable: false,
           // text    : 'Attach File',
           width: 30,
-<<<<<<< HEAD
           actions: [
             {
               cls: "b-fa b-fa-paperclip",
@@ -1002,44 +919,12 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
               },
             },
           ],
-=======
-          actions: [{
-            cls: "b-fa b-fa-paperclip",
-            onClick: ({
-              record
-            }) => {
-              if (
-                record._data.type == "Task" &&
-                record._data.id.indexOf("_generate") == -1 &&
-                record._data.name != "Milestone Complete"
-              ) {
-                this.showpopup = true;
-                this.fileTaskId = record._data.id;
-              }
-            },
-            renderer: ({
-              action,
-              record
-            }) => {
-              if (
-                record._data.type == "Task" &&
-                record._data.id.indexOf("_generate") == -1 &&
-                record._data.name != "Milestone Complete"
-              ) {
-                return `<i class="b-action-item ${action.cls}" data-btip="Attach"></i>`;
-              } else {
-                return `<i class="b-action-item ${action.cls}" data-btip="Attach" style="display:none;"></i>`;
-              }
-            },
-          }, ],
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
         },
         {
           type: "action",
           draggable: false,
           // text    : 'Files',
           width: 30,
-<<<<<<< HEAD
           actions: [
             {
               cls: "b-fa b-fa-file",
@@ -1064,42 +949,12 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
               },
             },
           ],
-=======
-          actions: [{
-            cls: "b-fa b-fa-file",
-            onClick: ({
-              record
-            }) => {
-              this.showFileForRecord = record._data.id;
-              this.showFilePopup = true;
-            },
-            renderer: ({
-              action,
-              record
-            }) => {
-              if (
-                record._data.type == "Task" &&
-                record._data.id.indexOf("_generate") == -1 &&
-                record._data.name != "Milestone Complete"
-              ) {
-                if (this.storeRes["" + record._data.id]["fileLength"]) {
-                  return `<i style="font-size:1.1rem;color:green;" class="b-action-item ${action.cls}" data-btip="File"></i>`;
-                }
-                return `<i style="font-size:1.1rem;" class="b-action-item ${action.cls}" data-btip="File"></i>`;
-                // return `<i class="b-action-item ${action.cls}" data-btip="File"></i>`;
-              } else {
-                return `<i class="b-action-item ${action.cls}" data-btip="File" style="display:none;"></i>`;
-              }
-            },
-          }, ],
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
         },
         {
           type: "action",
           draggable: false,
           //text    : 'Go to Item',
           width: 30,
-<<<<<<< HEAD
           actions: [
             {
               cls: "b-fa b-fa-external-link-alt",
@@ -1133,39 +988,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         tickWidth : 50
       },
 
-=======
-          actions: [{
-            cls: "b-fa b-fa-external-link-alt",
-            onClick: ({
-              record
-            }) => {
-              if (
-                record._data.id.indexOf("_generate") == -1 &&
-                record._data.name != "Milestone Complete"
-              ) {
-                console.log("Action link", record._data.id);
-                this.navigateToRecordViewPage(record._data.id);
-              }
-            },
-            renderer: ({
-              action,
-              record
-            }) => {
-              if (
-                record._data.type == "Task" &&
-                record._data.id.indexOf("_generate") == -1 &&
-                record._data.name != "Milestone Complete"
-              ) {
-                return `<i class="b-action-item ${action.cls}" data-btip="Go To Item"></i>`;
-              } else {
-                return `<i class="b-action-item ${action.cls}" data-btip="Go To Item" style="display:none;"></i>`;
-              }
-            },
-          }, ],
-        },
-      ],
-
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
       subGridConfigs: {
         locked: {
           flex: 3,
@@ -1257,13 +1079,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       },
 
       listeners: {
-<<<<<<< HEAD
         taskMenuBeforeShow({ record }) {
-=======
-        taskMenuBeforeShow({
-          record
-        }) {
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
           // put your location here where you want to disable the task menu
           if (
             record._data.type == "Phase" ||
@@ -1277,13 +1093,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       },
     });
 
-<<<<<<< HEAD
     gantt.on("cellClick", ({ record }) => {
-=======
-    gantt.on("cellClick", ({
-      record
-    }) => {
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
       console.log("cell event");
       gantt.scrollTaskIntoView(record);
     });
@@ -1437,57 +1247,33 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       taskData
     ); //!helper method to get list of string to delete
 
-<<<<<<< HEAD
     console.log("taskdata:- ", taskData);
-=======
-    console.log('taskdata:- ', taskData);
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
     // var mapofphase = {};
     // var listofmilestone = [];
     var newtasklistafterid = [];
     // var taskidrecordMap = new Map();
-<<<<<<< HEAD
     taskData.forEach((newTaskRecord) => {
       console.log("infor loop newTaskrecord");
       var demoidvar = newTaskRecord.Id;
       var demoidvar2 = newTaskRecord.buildertek__Dependency__c;
       console.log("demoidvar:- ", demoidvar);
-=======
-    taskData.forEach(newTaskRecord => {
-
-      console.log('infor loop newTaskrecord');
-      var demoidvar = newTaskRecord.Id
-      var demoidvar2 = newTaskRecord.buildertek__Dependency__c
-      console.log('demoidvar:- ', demoidvar);
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
       // taskidrecordMap.set(newTaskRecord.Id, newTaskRecord);
 
       if (demoidvar != undefined || demoidvar != null) {
         if (demoidvar.includes("_generatedt_")) {
-<<<<<<< HEAD
           console.log("newTaskRecord:- ", newTaskRecord);
           delete newTaskRecord.Id;
           console.log("newTaskRecord2:- ", newTaskRecord);
-=======
-          console.log('newTaskRecord:- ', newTaskRecord);
-          delete newTaskRecord.Id
-          console.log('newTaskRecord2:- ', newTaskRecord);
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
         }
       }
       if (demoidvar2 != undefined || demoidvar2 != null) {
         if (demoidvar2.includes("_generatedt_")) {
-<<<<<<< HEAD
           delete newTaskRecord.buildertek__Dependency__c;
-=======
-          delete newTaskRecord.buildertek__Dependency__c
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
         }
       }
       newtasklistafterid.push(newTaskRecord);
     });
 
-<<<<<<< HEAD
     console.log("taskData before apex:- ", newtasklistafterid);
     var that = this;
     console.log("Dependency Data map :- ", dependenciesDatamap);
@@ -1506,26 +1292,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         });
         console.log("response ", response);
         debugger;
-=======
-    console.log('taskData before apex:- ', newtasklistafterid);
-    var that = this;
-    console.log('Dependency Data map :- ', dependenciesDatamap)
-    // console.log('Task id and record Data map :- ', taskidrecordMap)
-    // console.log('Task id and record Data map :- ', JSON.stringify(taskidrecordMap))
-    upsertDataOnSaveChanges({
-        scheduleRecordStr: JSON.stringify(scheduleData),
-        taskRecordsStr: JSON.stringify(newtasklistafterid),
-        listOfRecordsToDelete: listOfRecordsToDelete,
-        // dependenciesDatamap: JSON.stringify(dependenciesDatamap),
-        // taskIdAndRecordDataMap :JSON.stringify(taskidrecordMap)
-      })
-      .then(function (response) {
-        console.log("response ", {
-          response
-        });
-        console.log("response ", response);
-        debugger
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
         if (response == "Success") {
           that.dispatchEvent(
             new ShowToastEvent({

@@ -216,28 +216,17 @@
     <aura:attribute name="parentAttribute" type="Boolean" default="false" />
     <c:BT_Spinner />
     <aura:attribute name="parentValue" type="String" />
-<<<<<<< HEAD
     <!-- <aura:handler name="init" value="{!this}" action="{!c.doInit}" /> -->
-=======
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 
 
 
 
-<<<<<<< HEAD
 
-    <div style="background: white;border-radius: 5px;height: 100%;" class="slds" id="slds">
+    <div style="background: white;border-radius: 5px;height: 100%;" class="slds" aura:id="slds">
 
 
     <aura:if isTrue="{!v.isproject}">
         <div class="slds-modal__header" style="font-size:17px; display:block; text-align:left;padding-inline: 25px; padding-block: 10px;">
-=======
-    <div style="background: white;border-radius: 5px;height: 100%;" class="slds">
-
-
-    <aura:if isTrue="{!v.isproject}">
-        <div class="slds-modal__header" style="font-size:17px; display:block; text-align:left;">
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
             <a href="{!'/'+v.quoteId}" onclick="{!c.closetab}">{!v.quoteName}</a>
                 <!-- <span style="float:right; font-size: small;">
                     <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{!c.closetab}"
@@ -246,11 +235,7 @@
             </div>
     </aura:if>
 
-<<<<<<< HEAD
         <div style="margin: 0px 0px;">
-=======
-        <div style="margin: -8px 0px;">
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
             <div style="display:block">
                 <aura:if isTrue="{!v.isproject}">
                     <!-- <a href="{!'/'+v.quoteId}" onclick="{!c.closetab}">{!v.quoteName}</a> -->
@@ -303,11 +288,7 @@
                         </div>
                     </aura:set>
                 </aura:if>
-<<<<<<< HEAD
                 <div id='btnDiv' style="display:flex; justify-content: right; margin-top: 10px; margin-bottom: -10px;"
-=======
-                <div id='btnDiv' style="display:flex; justify-content: right; margin-top: 30px;"
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
                     class="slds-m-top_medium slds-m-right_small">
                     <lightning:buttonGroup>
 
@@ -675,21 +656,12 @@
 
             <div aura:id="quoteItem" />
             <!-- <div class="av slds-box" id="{!v.recordId + 'groups'}" style="min-height:50vh;padding:0px !important;"> -->
-<<<<<<< HEAD
             <div class="av slds-box" id="{!v.recordId + 'groups'}" style="min-height:54vh;padding:0px !important;" aura:id="av">
                 <div>
                     <aura:if isTrue="{!!v.removeSingleQuoteLineOption}">
                         <div id='Tablebox' style="margin-top: -5px;padding-inline: 10px;padding-block: 0px;">
                             <br />
                             <div aura:id="inlineEditQuote" style="margin-bottom:10px;">
-=======
-            <div class="av slds-box" id="{!v.recordId + 'groups'}" style="min-height:54vh;padding:0px !important;">
-                <div>
-                    <aura:if isTrue="{!!v.removeSingleQuoteLineOption}">
-                        <div id='Tablebox' style="padding:10px;margin-top: -5px;">
-                            <br />
-                            <div aura:id="inlineEditQuote" style="margin-bottom:18px;">
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
                                 <table class="slds-table slds-table_bordered slds-table_cell-buffer"
                                     style="border:1px solid grey;border-radius: 5px;">
                                     <thead style="border:1px solid rgb(216, 237, 255);">
@@ -1053,11 +1025,7 @@
                                                 </td>
 
                                             </tr>
-<<<<<<< HEAD
                                             <tr class="slds-text-heading--label" style="line-height: 1.7;font-size: 12px;">
-=======
-                                            <tr class="slds-text-heading--label" style="line-height: 2;font-size: 12px;">
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
                                                 <th></th>
                                                 <th class="slds-is-sortable tabletitle" scope="col" width="5px">
                                                     <div class="slds-form-element">
@@ -1105,11 +1073,7 @@
                                             </tr>
                                             <aura:iteration items="{!v.TotalRecords.tarTable.ListOfEachRecord}"
                                                 var="tar" indexVar="quoteIndex">
-<<<<<<< HEAD
                                                 <tr style="line-height: 1.7;display:table-row;"
-=======
-                                                <tr style="line-height: 2.5;display:table-row;"
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
                                                     class="{!v.quoteId+' slds-hint-parent groupRows_'+groupIndex}">
                                                     <!-- quoteId -->
 
@@ -1429,11 +1393,7 @@
                                                     </aura:if>
                                                 </aura:iteration>
                                             </tr>
-<<<<<<< HEAD
                                             <!-- <br /> -->
-=======
-                                            <br />
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 
                                             <!--<br />
                                     <br />-->

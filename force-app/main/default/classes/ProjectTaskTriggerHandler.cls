@@ -7,10 +7,6 @@
 public class ProjectTaskTriggerHandler{
 	public static Boolean isFirstTime = true;
 	public static Boolean isTask = true;
-<<<<<<< HEAD
-=======
-	public static Boolean newSchedule = false;
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 	//Boolean variable to allow skipping execution of trigger in certain scenarios
 	public static Boolean blnSkipTaskTrigger = false;
 	public static Boolean updateFromGanttChart = false;
@@ -330,15 +326,8 @@ public class ProjectTaskTriggerHandler{
 			if (newScheduleItemList.size() > 0){
 				Boolean flag = ProjectTaskTriggerHandler.blnSkipTaskTrigger;
 				ProjectTaskTriggerHandler.blnSkipTaskTrigger = !flag;
-<<<<<<< HEAD
 				update newScheduleItemList;
 				ProjectTaskTriggerHandler.blnSkipTaskTrigger = flag;
-=======
-				NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = !flag;
-				update newScheduleItemList;
-				ProjectTaskTriggerHandler.blnSkipTaskTrigger = flag;
-				NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = flag;
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 			}
 		}
 
@@ -514,17 +503,9 @@ public class ProjectTaskTriggerHandler{
 		}
 		ScheduleTriggerHandler handler = new ScheduleTriggerHandler(true, taskCompletionMap.values().size());
 		handler.blnSkipTaskTrigger = true;
-<<<<<<< HEAD
 		update taskCompletionMap.values();
 
 		handler.blnSkipTaskTrigger = false;
-=======
-		NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
-		update taskCompletionMap.values();
-
-		handler.blnSkipTaskTrigger = false;
-		NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = false;
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 		system.debug(updatedProjectTasks);
 		// Map<Id, buildertek__Schedule__c> scheduleMap1 = new Map<Id, buildertek__Schedule__c>([Select Id, buildertek__Initial_Start_Date__c, Name, buildertek__Contractor__c, buildertek__Internal_Resource_1__c, buildertek__Project_Manager__c, buildertek__Days_Completed__c
 		//                                                                                       FROM buildertek__Schedule__c
@@ -825,17 +806,9 @@ public class ProjectTaskTriggerHandler{
 
 			if (projectTaskToUpdate.size() > 0){
 				ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
-<<<<<<< HEAD
 				update projectTaskToUpdate;
 
 				ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
-=======
-				NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
-				update projectTaskToUpdate;
-
-				ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
-				NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = false;
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 			}
 		}
 
@@ -1096,10 +1069,6 @@ public class ProjectTaskTriggerHandler{
 		}
 
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
-<<<<<<< HEAD
-=======
-		NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 		if (projectTaskToUpdate.size() > 0){
 			update projectTaskToUpdate;
 		}
@@ -1113,10 +1082,6 @@ public class ProjectTaskTriggerHandler{
 		// UpdateScheduleItemdatesbatchhelper.batchjobexcute(mapAllTask.keySet());
 
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
-<<<<<<< HEAD
-=======
-		NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = false;
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 
 	}
 
@@ -1214,7 +1179,6 @@ public class ProjectTaskTriggerHandler{
 
 		if (insertUpdateMilestoneMap.values().size() > 0){
 			ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
-<<<<<<< HEAD
 			upsert insertUpdateMilestoneMap.values();
 			ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
 		}
@@ -1223,22 +1187,6 @@ public class ProjectTaskTriggerHandler{
 			ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
 			delete deletemilestoneMap.values();
 			ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
-=======
-			NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
-			ProjectTaskTriggerHandler.newSchedule = false;
-			upsert insertUpdateMilestoneMap.values();
-			ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
-			NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = false;
-		}
-		
-		if (deletemilestoneMap.values().size() > 0){
-			ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
-			NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
-			ProjectTaskTriggerHandler.newSchedule = false;
-			delete deletemilestoneMap.values();
-			ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
-			NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = false;
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 		}
 	}
 
@@ -1397,10 +1345,6 @@ public class ProjectTaskTriggerHandler{
 		}
 
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
-<<<<<<< HEAD
-=======
-		NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 		system.debug('ProjectTasks-->' + ProjectTasks);
 		// System.debug('newUpdateProjectTaskMap-->' + newUpdateProjectTaskMap.values());
 		if (dependencyPathExist && newUpdateProjectTaskMap.values().size() > 0){
@@ -1410,20 +1354,12 @@ public class ProjectTaskTriggerHandler{
 			System.debug(' after $update$ '+key +' Value => '+newUpdateProjectTaskMap.get(key));
 		}
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
-<<<<<<< HEAD
-=======
-		NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = false;
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 		ProjectTaskTriggerHandler.isFromImport = false;
 		}
 	}
 
 	public static void checkDependency(List<buildertek__Project_Task__c> scheduleItemId){
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
-<<<<<<< HEAD
-=======
-		NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 		List<buildertek__Project_Task__c> scheduleItem = [SELECT Id, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c, buildertek__Dependency__c, buildertek__Dependency__r.buildertek__Start__c, buildertek__Dependency__r.buildertek__Finish__c, buildertek__Dependency__r.buildertek__Duration__c
 		                                                  FROM buildertek__Project_Task__c
 		                                                  WHERE buildertek__Dependency__c IN:scheduleItemId];
@@ -1465,10 +1401,6 @@ public class ProjectTaskTriggerHandler{
 			}
 			if (projectTaskToUpdateNew.size() > 0){
 				ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
-<<<<<<< HEAD
-=======
-				NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 				update projectTaskToUpdateNew;
 
 				checkDependency(projectTaskToUpdateNew);
@@ -1525,14 +1457,8 @@ public class ProjectTaskTriggerHandler{
 			}
 		}
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
-<<<<<<< HEAD
 		update mapAllTask.values();
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
-=======
-		NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
-		update mapAllTask.values();
-		NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = false;
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 	}
 
 	public static Date addBussinessDays(Date startDate, Integer iDays){
@@ -1724,15 +1650,8 @@ public class ProjectTaskTriggerHandler{
 		if (listAccs.size() > 0){
 			ScheduleTriggerHandler schdulehandlerCustom = new ScheduleTriggerHandler(true, listAccs.size());
 			schdulehandlerCustom.blnSkipTaskTrigger = true;
-<<<<<<< HEAD
 			update listAccs;
 			schdulehandlerCustom.blnSkipTaskTrigger = false;
-=======
-			NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
-			update listAccs;
-			schdulehandlerCustom.blnSkipTaskTrigger = false;
-			NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = false;
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 		}
 	}
 
@@ -1832,15 +1751,8 @@ public class ProjectTaskTriggerHandler{
 		}
 		if (scheduleItemList.size() > 0){
 			ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
-<<<<<<< HEAD
 			insert scheduleItemList;
 			ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
-=======
-			NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
-			insert scheduleItemList;
-			ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
-			NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = false;
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 		}
 	}
 

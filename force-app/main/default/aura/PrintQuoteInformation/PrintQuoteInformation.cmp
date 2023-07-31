@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader" access="global" controller="PreviewQuoteController">
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:attribute name="Spinner" type="Boolean" default="false"/>
@@ -23,6 +22,9 @@
     <aura:attribute name="parentId" type="string" />
     <aura:attribute name="fileimageId" type="string" />
     <aura:attribute name="memoquote" type="string" />
+
+    <ltng:require scripts="{!$Resource.jsPDF}" afterScriptsLoaded="{!c.afterScriptsLoaded}" />
+
 
 
     <ltng:require styles="{!$Resource.ModalPreviewCSS}" />
@@ -72,20 +74,3 @@
          </div>
      </div>
    </aura:component>
-=======
-<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader" access="global">
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
-    <aura:attribute name="Spinner" type="Boolean" default="false"/>
-    <aura:attribute name="BaseURL" type="String"/>
-    <iframe src="{!'/apex/buildertek__BT_PrintQuoteInformation_VF?Id=' + v.recordId }" width="100%" height="500px;" frameBorder="0"/>
-    <aura:if isTrue="{!v.Spinner}">
-        <div aura:id="spinnerId" class="slds-spinner_container">
-           <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
-             <span class="slds-assistive-text">Loading</span>
-             <div class="slds-spinner__dot-a"></div>
-             <div class="slds-spinner__dot-b"></div>
-           </div>
-        </div>
-     </aura:if>
-</aura:component>
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf

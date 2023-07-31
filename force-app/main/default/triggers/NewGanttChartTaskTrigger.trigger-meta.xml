@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApexTrigger xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>57.0</apiVersion>
-<<<<<<< HEAD
     <status>Inactive</status>
-=======
-    <status>Active</status>
->>>>>>> 5b0b506af52afeb167ca361ad895791a24ffaabf
 </ApexTrigger>
