@@ -39,7 +39,7 @@ public with sharing class ImportMasterQuotes {
                                         buildertek__Project__r.Name,
                                         buildertek__Type__c
                                         FROM buildertek__Quote__c
-                                        WHERE buildertek__Type__c = 'Master' AND Name LIKE:searchString];    
+                                        WHERE buildertek__Type__c = 'Master' AND Name LIKE:searchString ORDER BY Name ASC];    
         
               }
         for(buildertek__Quote__c qut : quotesList){

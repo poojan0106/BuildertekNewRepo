@@ -222,7 +222,7 @@
 
 
 
-    <div style="background: white;border-radius: 5px;height: 100%;" class="slds" aura:id="slds">
+    <div style="background: white;border-radius: 5px;height: 100%;" class="slds" id="slds">
 
 
     <aura:if isTrue="{!v.isproject}">
@@ -1127,7 +1127,7 @@
                                                                     change="{!c.updateQuoteData}" blur="{!c.onblur}" />
                                                                 <aura:set attribute="else">
                                                                     <div class="slds-truncate"
-                                                                        title="{!tar.recordName}" style="white-space: normal; word-wrap: break-word;">
+                                                                        title="{!tar.recordName}" style="white-space: nowrap; word-wrap: break-word;">
                                                                         <a href="javascript:void(0);" role="menuitem"
                                                                             tabindex="-1" data-record="{!tar.recordId}"
                                                                             onclick="{!c.doView}">

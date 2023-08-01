@@ -38,7 +38,7 @@
 
         // var mainDiv = component.find("av").getElement();
         // var Element = document.getElementById("slds");
-        // console.log('bottom => ', Element.clientTop);
+        // console.log('bottom => ', mainDiv);
     },
 
     doInit: function(component, event, helper) {

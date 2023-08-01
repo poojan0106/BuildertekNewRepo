@@ -23,16 +23,12 @@
     <aura:attribute name="fileimageId" type="string" />
     <aura:attribute name="memoquote" type="string" />
 
-    <ltng:require scripts="{!$Resource.jsPDF}" afterScriptsLoaded="{!c.afterScriptsLoaded}" />
-
-
 
     <ltng:require styles="{!$Resource.ModalPreviewCSS}" />
 
+    
     <aura:html tag="style">
         .slds-modal__container { width:80% !important; max-width: 80% !important; overflow: hidden !important; } .slds-modal__content { overflow: hidden !important; } .slds-modal__close{ display:block !important; }
-
-
     </aura:html>
 
       <div class="slds-modal__content">
@@ -60,7 +56,7 @@
                                  { padding: 0rem !important; }
                              </aura:html>
  
-                             <p class="slds-text-longform tile__title red-txt">
+                             <p class="slds-text-longform tile__title red-txt" id="contnet">
                                  <aura:unescapedHtml value="{!v.quoteLines}" />
                              </p>  
                              <br />
