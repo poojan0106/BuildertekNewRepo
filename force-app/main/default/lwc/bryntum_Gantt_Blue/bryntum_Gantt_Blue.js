@@ -32,7 +32,6 @@ import changeOriginalDates from "@salesforce/apex/BT_NewGanttChartCls.changeOrig
 
 import setWBSValue from "@salesforce/apex/BT_NewGanttChartCls.setWBSValue";
 
-import AdminSettings from "@salesforce/apex/BT_NewGanttChartCls.getColumnSettings";
 import PARSER from "@salesforce/resourceUrl/PapaParse";
 
 import { formatData, saveeditRecordMethod } from "./bryntum_GanttHelper";
@@ -173,7 +172,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   @track contractorname;
   @track showOriginalDateModal = false;
   @track blankPredecessor = false;
-  @track boolList;
 
   //New Toast message
   @track showToast = true;
@@ -218,12 +216,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   }
 
   errorCallback(error, stack) {}
-
-  @wire (AdminSettings)
-  relatedMedia({data,error}) {
-    console.log('data in wire ',data);
-    this.boolList = data;
-  };
 
   get acceptedFormats() {
     return [".pdf", ".png", ".jpg", ".jpeg", ".csv", ".docx", ".doc"];
@@ -1722,8 +1714,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         }
       }
       this.scheduleItemsDataList = scheduleDataList;
-      console.log('boolList:- ', this.boolList);
-      // var doNotShiftSchedule = this.boolList[3];
+
       var doNotShiftSchedule = false;
       console.log('manuallyScheduledList:- ', doNotShiftSchedule);
       var formatedSchData = formatData(
@@ -1837,9 +1828,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         // calendarsData: data.calendars.rows,
         calendarsData: holiday,
       });
-      console.log("calendar rows to  ==>", Array.isArray(data.calendars.rows));
-      let hideInternalRes, hideContractor, hideContratorRes;
-      [hideInternalRes, hideContractor, hideContratorRes] = this.boolList;
       const gantt = new bryntum.gantt.Gantt({
         project,
         appendTo: this.template.querySelector(".container"),
@@ -2048,7 +2036,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                     );
                   }
                 }
-                
+
               } else {
                 if (doNotShiftSchedule && record.record.type == 'Phase'){
 
@@ -2077,7 +2065,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                     ", " +
                     sdate.getFullYear()
                   );
-                  
+
                 } else{
                   var sdate = new Date(record.record.startDate);
                   return (
@@ -2245,7 +2233,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                     endDate = new Date(record.record._parent._data.endDate);
                     endDate.setDate(endDate.getDate() - 1);
                     endDate = new Date(endDate);
-  
+
                     return (
                       months[endDate.getMonth()] +
                       " " +
@@ -2316,7 +2304,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
             text: "Internal Resource",
             width: 100,
             editor: false,
-            hidden: hideInternalRes,
             renderer: function (record) {
               if (
                 record.record._data.type == "Task" &&
@@ -2356,7 +2343,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
             text: "Contractor",
             width: 110,
             editor: false,
-            hidden: hideContractor,
             renderer: function (record) {
               if (
                 record.record._data.type == "Task" &&
@@ -2395,7 +2381,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
             text: "Contractor Resource",
             width: 110,
             editor: false,
-            hidden: hideContratorRes,
             renderer: function (record) {
               if (
                 record.record._data.type == "Task" &&
