@@ -1,8 +1,27 @@
 ({
 	doInit : function(component, event, helper) {
 	    helper.getPODetails(component, event, helper);
-		helper.getSchedules(component, event, helper);
+		// helper.getSchedules(component, event, helper);
 		// helper.fetchPickListVal(component, 'phaseId', 'buildertek__Phase__c');
+	},
+    getschdule : function(component, event, helper) {
+        var proId = component.get("v.selectedProjectId");
+        console.log('proId====>',proId);
+	    if (proId != undefined) {
+            helper.getSchedules(component, event, helper);  
+        }else {
+            var toastEvent = $A.get("e.force:showToast"); 
+            toastEvent.setParams({
+                "title" : "Error",
+                //"message" : result.Message,
+                "message" : 'Please select Project first.',
+                "type" : "error",
+                "duration" : 3000
+            });
+            toastEvent.fire();
+        }
+		
+		
 	},
 	 
 	clearSelectedValue : function(component, event, helper) {
@@ -58,7 +77,7 @@
    },*/
    
    save : function(component, event, helper) {
-    //    component.set("v.Spinner", true);
+       component.set("v.Spinner", true);
        var taskname = component.get("v.TaskName")
        console.log('taskname====>',taskname);
        var projectId = component.get("v.selectedProjectId");
@@ -69,7 +88,8 @@
        console.log('scheduleItemId======>',scheduleItemId);
        var startDate = component.get("v.startTime");
        console.log('startDate====>',startDate);
-       
+       var conId = component.get("v.selectedContactRecord");
+       console.log('conId====>',conId);
 
        if (taskname != '' && scheduleId != '' && startDate != '') {
         var action = component.get('c.insertScheduleTask');
@@ -77,20 +97,23 @@
            task: taskname,
            scheduleId : scheduleId,
            dependency : scheduleItemId,
-        //    contactorResource : '',
+           contactorResource : conId,
            startdate : startDate,
            project : projectId
        });
        action.setCallback(this, function(response){
             var state = response.getState();
-            //alert('state -------> '+state);
+            // alert('state -------> '+state);
             if(state === "SUCCESS"){
                 var result = response.getReturnValue();
-                //alert('result --------> '+JSON.stringify(result));
+                // alert('result --------> '+JSON.stringify(result));
+                // console.log('response --------> '+response);
+                // console.log('result --------> '+result);
                     component.set("v.Spinner", false);
+                    $A.get("e.force:closeQuickAction").fire()
                     var navEvt = $A.get("e.force:navigateToSObject");
                     navEvt.setParams({
-                      "recordId": response,
+                      "recordId": result,
                       "slideDevName": "detail"
                     });
                     navEvt.fire();
@@ -111,6 +134,7 @@
                 
             }else{
                 component.set("v.Spinner", false);
+                $A.get("e.force:closeQuickAction").fire()
                  var toastEvent = $A.get("e.force:showToast"); 
                         toastEvent.setParams({
                             "title" : "Error",

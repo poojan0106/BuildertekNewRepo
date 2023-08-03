@@ -6,6 +6,8 @@
      <!-- <aura:attribute name="taskRecord" type="Project_Task__c" default="{ 'sobjectType': 'Project_Task__c',
                                                                                    'Name':''}"/> -->
      <aura:attribute name="Spinner" type="boolean" default="false"/>
+     <aura:attribute name="disablePro" type="boolean" default="false"/>
+     <aura:attribute name="disableCon" type="boolean" default="false"/>
      <aura:attribute name="isNewTask" type="boolean" />
      <aura:attribute name="isNewTasks" type="boolean" />
      <aura:attribute name="TaskName" type="String" />
@@ -38,6 +40,15 @@
         .buildertekBT_LightningLookup.mainDiv {
             padding-top: 1% !important;
         }
+        .forceStyle.desktop .slds-form .slds-form-element__label{
+            display: none !important;
+        }
+        .rkclass1 .slds-form-element_stacked:not(.slds-is-editing) {
+            padding-top: 0.3% !important;
+            padding-right: 0% !important;
+            padding-bottom: 0% !important;
+            padding-left: 0% !important;
+        }
      </aura:html>
 
      
@@ -58,12 +69,15 @@
                         </div>
                     </div>
                     <div class="slds-form-element slds-size_1-of-2">
-                        <div class="slds-form-element__control">
+                        <div class="slds-form-element__control rkclass1">
                             <label>Project</label>
-                            <span class="{!if(v.isProject == false,'slds-show','slds-hide')}">
+                            <!-- <span class="{!if(v.isProject == false,'slds-show','slds-hide')}">
                                 <c:BT_LightningLookup objectAPIName="buildertek__Project__c" aura:id="projectLookup" selectedRecord="{!v.selectedProjectRecord}"/>
                             </span>
-                            <lightning:input type="search" class="{!if(v.isProject == true,'slds-show','slds-hide')}" style="margin-top: -17px;" name="search" value="{!v.selectedLookUpRecordName}" onchange="{!c.clearSelectedValue}" disabled="true"/>       
+                            <lightning:input type="search" class="{!if(v.isProject == true,'slds-show','slds-hide')}" style="margin-top: -17px;" name="search" value="{!v.selectedLookUpRecordName}" onchange="{!c.clearSelectedValue}" disabled="true"/>        -->
+                            <lightning:recordEditForm objectApiName="WorkOrder">
+                                    <lightning:inputField fieldName="buildertek__Project__c" value="{!v.selectedProjectId}" disabled="{!v.disablePro}"/>
+                            </lightning:recordEditForm>
                         </div>
                     </div>
                 </div>
@@ -71,7 +85,7 @@
                 <div class="slds-form-element__row">
                     <div class="slds-form-element slds-size_1-of-2">
                         <div class="slds-form-element__control">
-                            <lightning:select name="colorId" label="Schedule" aura:id="colorId" value="{!v.selectedValue}" required="true" onchange="{!c.handleScheduleChange}">
+                            <lightning:select name="colorId" label="Schedule" aura:id="colorId" value="{!v.selectedValue}" required="true" onchange="{!c.handleScheduleChange}" onfocus="{!c.getschdule}">
                                 <option text="None" value="" /> 
                                 <aura:iteration items="{!v.Schedules}" var="sch">
                                     <option text="{!sch.getSchedulesList.Name +' - '+sch.getSchedulesList.buildertek__Description__c}" value="{!sch.getSchedulesList.Id}" />
@@ -135,10 +149,13 @@
                     </div>
 
                     <div class="slds-form-element slds-size_1-of-2">
-                        <div class="slds-form-element__control">
+                        <div class="slds-form-element__control rkclass1">
                             <label >Resource</label>
                             <!-- <span class="{!if(v.isVendor == false,'slds-show','slds-hide')}"> -->
-                                <c:BT_LightningLookup objectAPIName="Contact" IconName="standard:contact" selectedRecord="{!v.selectedContactRecord}"/> 
+                                <!-- <c:BT_LightningLookup objectAPIName="Contact" IconName="standard:contact" selectedRecord="{!v.selectedContactRecord}"/>  -->
+                                <lightning:recordEditForm objectApiName="WorkOrder">
+                                    <lightning:inputField fieldName="ContactId" value="{!v.selectedContactRecord}" disabled="{!v.disableCon}"/>
+                                </lightning:recordEditForm>
                                 <!-- <c:BT_MultiSelectLookup objectAPIName="contact"
                                                     IconName="standard:contact"
                                                     lstSelectedRecords="{!v.selectedContacts}"

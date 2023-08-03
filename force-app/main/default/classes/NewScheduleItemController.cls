@@ -2,20 +2,20 @@ public with sharing class NewScheduleItemController {
         
     @AuraEnabled
     public static WorkOrder getPurchaseOrderData(String recordId){
-        WorkOrder pur= [select Id, buildertek__Project__c, buildertek__Project__r.Name from WorkOrder where Id =: recordId];
+        WorkOrder pur= [select Id, buildertek__Project__c, buildertek__Project__r.Name, ContactId from WorkOrder where Id =: recordId];
         return pur;     
     }
     
     @AuraEnabled
     public static List<ScheduleWrap> getSchedulelist(String recordId){
-        WorkOrder pur = [select Id, buildertek__Project__c from WorkOrder where Id =: recordId]; 
-        system.debug('projectId -----> '+pur.buildertek__Project__c);
+        // WorkOrder pur = [select Id, buildertek__Project__c from WorkOrder where Id =: recordId]; 
+        // system.debug('projectId -----> '+pur.buildertek__Project__c);
         list<Schedule__c> getSchedulesList;
          if(Schema.sObjectType.Schedule__c.fields.Id.isAccessible() &&
             Schema.sObjectType.Schedule__c.fields.Name.isAccessible()&&
             Schema.sObjectType.Schedule__c.fields.buildertek__Description__c.isAccessible() &&
             Schema.sObjectType.Schedule__c.fields.buildertek__Project__c.isAccessible()){
-             getSchedulesList = [select id, Name, buildertek__Description__c from Schedule__c where buildertek__Project__c =: pur.buildertek__Project__c];
+             getSchedulesList = [select id, Name, buildertek__Description__c from Schedule__c where buildertek__Project__c =: recordId];
             }
         system.debug('getSchedulesList ---------> '+getSchedulesList);
         list<ScheduleWrap> ScheduleWrapList = new list<ScheduleWrap>(); 
@@ -66,33 +66,46 @@ public with sharing class NewScheduleItemController {
     }
     
     @AuraEnabled
-    public static String insertScheduleTask(String task, String scheduleId, String dependency, Date startdate, String project){
+    public static String insertScheduleTask(String task, String scheduleId, String dependency, Date startdate, String project, String contactorResource){
         ErrorMessageClass errMessage = new ErrorMessageClass();
         try{
             buildertek__Project_Task__c projectTask = new buildertek__Project_Task__c();
+    
+            if (!String.isBlank(task)) {
                 projectTask.Name = task; 
+            }
+            if (!String.isBlank(project)) {
                 projectTask.buildertek__Project__c = project;
+            }
+            if (!String.isBlank(scheduleId)) {
                 projectTask.buildertek__Schedule__c = scheduleId;
+            }
+            if (startdate != null) {
                 projectTask.buildertek__Start__c = startdate;
-                // projectTask.buildertek__Contractor_Resource__c = contactorResource;
+            }
+            if (!String.isBlank(contactorResource)) {
+                projectTask.buildertek__Contractor_Resource__c = contactorResource;
+            }
+            if (!String.isBlank(dependency)) {
                 projectTask.buildertek__Dependency__c = dependency;
-
+            }
+    
             System.debug('projectTask :: '+projectTask);
             insert projectTask; 
-            
+            System.debug('projectTask id :: '+projectTask.Id);
             // errMessage.MessageType = 'Success';
             // errMessage.Message = 'Purchase Order Scheduled Successfully';
             return projectTask.Id;
-        }catch(Exception exp){
+        } catch(Exception exp){
             errMessage.Message = exp.getMessage(); 
             errMessage.MessageType = 'Error';
             System.debug('error line :: '+exp.getLineNumber());
             System.debug('error line :: '+exp.getMessage());
-
+    
             return null;
         }
-        
     }
+    
     
 
     @AuraEnabled

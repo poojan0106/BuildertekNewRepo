@@ -1412,7 +1412,7 @@
                             </div>
                             <!--<br />-->
                             <aura:if isTrue="{!v.total > 50}">
-                                <div class="slds-align_absolute-center" style="background-color: white;">
+                                <div class="slds-align_absolute-center" style="background-color: white; padding-block: 5px">
                                     <lightning:button disabled="{!v.page == 1}" variant="brand" label="Previous"
                                         onclick="{! c.navigate }" />
                                     <lightning:button disabled="{!v.page == v.pages}" aura:id="previousPage"
