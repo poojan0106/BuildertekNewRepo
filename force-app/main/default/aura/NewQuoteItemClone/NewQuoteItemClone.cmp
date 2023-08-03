@@ -217,7 +217,18 @@
     <c:BT_Spinner />
     <aura:attribute name="parentValue" type="String" />
     <!-- <aura:handler name="init" value="{!this}" action="{!c.doInit}" /> -->
-
+    <aura:HTML tag="style">
+        @media only screen and (max-width: 1980px) and (min-width: 1780px){
+            .slds-tabs_default{
+                min-height: 71vh; height: 71vh;
+            }
+        }
+        @media only screen and (max-width: 1369px) and (min-width: 720px){
+            .slds-tabs_default{
+                min-height: 86vh; height: 86vh;
+            }
+        }
+    </aura:HTML>
 
 
 
@@ -235,7 +246,7 @@
             </div>
     </aura:if>
 
-        <div style="margin: 0px 0px;">
+        <div style="margin: 0px 0px; min-height: 60vh; height: 60vh;">
             <div style="display:block">
                 <aura:if isTrue="{!v.isproject}">
                     <!-- <a href="{!'/'+v.quoteId}" onclick="{!c.closetab}">{!v.quoteName}</a> -->
@@ -657,7 +668,7 @@
             <div aura:id="quoteItem" />
             <!-- <div class="av slds-box" id="{!v.recordId + 'groups'}" style="min-height:50vh;padding:0px !important;"> -->
             <div class="av slds-box" id="{!v.recordId + 'groups'}" style="min-height:54vh;padding:0px !important;" aura:id="av">
-                <div>
+                <div style="min-height: 60vh; height: 61vh;">
                     <aura:if isTrue="{!!v.removeSingleQuoteLineOption}">
                         <div id='Tablebox' style="margin-top: -5px;padding-inline: 10px;padding-block: 0px;">
                             <br />
